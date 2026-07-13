@@ -1,6 +1,6 @@
 // rubik's cube representation
 
-const COLORS = {
+const COLORS_TEST = {
   0: "white",
   1: "yellow",
   2: "blue",
@@ -20,7 +20,7 @@ const sampleCube = [
 
 const sliceCubeForHint = cube => [...cube.slice(0, 9), ...cube.slice(9, 12), ...cube.slice(27, 30), ...cube.slice(36, 39), ...cube.slice(45, 48)];
 
-console.log(COLORS[sampleCube[27]])
+console.log(COLORS_TEST[sampleCube[27]])
 
 console.log("Sliced Cube: ", sliceCubeForHint(sampleCube))
 

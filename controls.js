@@ -1,38 +1,80 @@
-export function keyboardControls(cube, syncFunc) {
+import * as THREE from "three";
+import { moveToCubiePosition } from "./rotating_animations";
+
+export function keyboardControls(cube, syncFunc, cubies, scene) {
+  let isAnimationRunning = false;
 
   window.addEventListener("keydown", (e) => {
-  let moveExecuted = true;
+    if (isAnimationRunning) return;
 
-  switch (e.key) {
-    // Clockwise Moves (Lowercase)
-    case "u": cube.moveU(); break;
-    case "d": cube.moveD(); break;
-    case "l": cube.moveL(); break;
-    case "r": cube.moveR(); break;
-    case "f": cube.moveF(); break;
-    case "b": cube.moveB(); break;
-    case "m": cube.moveM(); break;
-    case "e": cube.moveE(); break;
+    const moveInfo = moveToCubiePosition[e.key];
 
-    // Anti-clockwise Moves (Uppercase / Shift + key)
-    case "U": cube.moveUDash(); break;
-    case "D": cube.moveDDash(); break;
-    case "L": cube.moveLDash(); break;
-    case "R": cube.moveRDash(); break;
-    case "F": cube.moveFDash(); break;
-    case "B": cube.moveBDash(); break;
-    case "M": cube.moveMDash(); break;
-    case "E": cube.moveEDash(); break;
+    // if user presses a key thats in the helper map
+    if (moveInfo) {
+      isAnimationRunning = true;
 
-    default:
-      // Key pressed wasn't a valid move
-      moveExecuted = false; 
+      // helper function
+      animateMove(moveInfo, cube, syncFunc, cubies, scene, () => {
+        isAnimationRunning = false;
+      });
+    }
+  });
+}
+
+function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComplete) {
+  // current layer selected for move
+  const cubiesActiveLayer = cubies.filter((cubie) => {
+    return cubie.position[moveInfo.axis] === moveInfo.value;
+  });
+
+  // group layer to "invisible" pivot at (0,0,0)
+  const pivot = new THREE.Group();
+  scene.add(pivot);
+
+  // add cubies to pivot
+  cubiesActiveLayer.forEach((cubie) => {
+    pivot.attach(cubie);
+  });
+
+  let currAngle = 0;
+  let finalAngle = moveInfo.angle;
+
+  // velocity of animation
+  const speed = 0.08;
+  let direction = 1;
+  if (finalAngle < 0) {
+    direction *= -1;
   }
 
-  // Only update the visuals if a valid move was actually made
-  if (moveExecuted) {
-    syncFunc();
-  }
-});
+  // inner animation loop
+  function tick() {
+    // increment current angle, i.e. add velocity
+    currAngle += speed * direction;
 
+    // if rotation finished
+    if (Math.abs(currAngle) >= Math.abs(finalAngle)) {
+      // reset pivot
+      pivot.rotation[moveInfo.axis] = 0;
+
+      // add cubies back to scene and remove pivot
+      cubiesActiveLayer.forEach((cubie) => scene.add(cubie));
+      scene.remove(pivot);
+
+      cubeState[moveInfo.move]();
+      syncFunc();
+
+      // finish loop, ready for next move
+      onComplete();
+
+      return;
+    }
+
+    // update pivot angle with current angle
+    pivot.rotation[moveInfo.axis] = currAngle;
+
+    requestAnimationFrame(tick);
+  }
+
+  tick();
+  // update state and screen
 }

@@ -223,7 +223,10 @@ rCube.moveD()
 
 console.log(rCube.getCube())
 
-// todo => host on github
+
 // todo => refactor code into different files and functions and then import into index.js.
 // todo => test rotations with testing scripts amongst other stuff.
 // todo => state changes => setup setter function in rubik's cube state class?
+// todo => add keyboard controls for orienting the cube
+// todo => add mouse and click controls for orienting and rotating the cube.
+// todo => save state to local storage, so previous state of cube is saved.
