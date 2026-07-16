@@ -212,6 +212,19 @@ export class RubiksCube {
     this._anticlockwiseSwaps(14, 41, 50, 32)
   }
 
+  // S -> middle clockwise slice
+  moveS() {
+    this._clockwiseSwaps(3, 37, 23, 34);
+    this._clockwiseSwaps(4, 40, 22, 31);
+    this._clockwiseSwaps(5, 43, 21, 28);
+  }
+
+  moveSDash() {
+    this._anticlockwiseSwaps(3, 37, 23, 34);
+    this._anticlockwiseSwaps(4, 40, 22, 31);
+    this._anticlockwiseSwaps(5, 43, 21, 28);
+  }
+
   getCube() {
     return [...this.state]
   }
@@ -226,7 +239,6 @@ console.log(rCube.getCube())
 
 // todo => refactor code into different files and functions and then import into index.js.
 // todo => test rotations with testing scripts amongst other stuff.
-// todo => state changes => setup setter function in rubik's cube state class?
-// todo => add keyboard controls for orienting the cube
-// todo => add mouse and click controls for orienting and rotating the cube.
+// todo => m and e button clicks sort out and s rotation
+// todo => need x and y rotations for oll and pll and need double layer moves -> how to classify double layer moves.
 // todo => save state to local storage, so previous state of cube is saved.

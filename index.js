@@ -15,6 +15,10 @@ import {
 import { COORDINATES_TO_STATE_INDEXES } from "./state_to_visual";
 import { COLORS, RubiksCube } from "./rubik's_cube_state";
 import { keyboardControls } from "./controls";
+import { scrambleCube } from "./scramble";
+
+// variable to lock screen when sequence of moves (scramble) in progress
+const currAppState = { isRotating: false }
 
 // pull canvas from html
 const canvas = document.querySelector("canvas");
@@ -31,7 +35,9 @@ const far = 1000;
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 // Move the camera back a bit so we aren't inside the center of the scene (0,0,0)
-camera.position.z = 5;
+camera.position.z = 4;
+camera.position.y = 2;
+camera.position.x = -2
 
 // Create the WebGLRenderer and link it to your canvas
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
@@ -51,8 +57,46 @@ const controls = new TrackballControls(camera, renderer.domElement);
 controls.rotateSpeed = 2.0;
 controls.panSpeed = 2;
 controls.dynamicDampingFactor = 0.3;
+controls.keys = ["KeyA", "KeyB", "KeyC"]
 
+// all cubies stored here.
 const cubies = [];
+
+
+// OPTION: mouse clicking for rotations
+
+// const raycaster = new THREE.Raycaster();
+// const mouse = new THREE.Vector2();
+
+// renderer.domElement.addEventListener("click", (e) => {
+//   console.log("cube clicked")
+//   // set mouse coordinates
+//   const rectangle = renderer.domElement.getBoundingClientRect()
+//   console.log(rectangle)
+
+//   mouse.x = ((e.clientX - rectangle.left) / rectangle.width) * 2 - 1;
+//   mouse.y = -((e.clientY - rectangle.top) / rectangle.height) * 2 + 1;
+
+//   // fire ray through mouse position
+//   raycaster.setFromCamera(mouse, camera);
+
+
+//   const intersects = raycaster.intersectObjects(cubies, true);
+
+
+//   if (intersects.length > 0) {
+//     const clickedCubie = intersects[0].object.position;
+
+//     console.log(clickedCubie)
+
+//     const clickedCubieDirection = intersects[0].normal;
+//     console.log(clickedCubieDirection)
+//   }
+// })
+
+
+
+
 
 function generateCubies() {
   let count = 0;
@@ -121,8 +165,10 @@ console.log("ALL CUBIES: ", cubies);
 function animate() {
   requestAnimationFrame(animate);
 
-  controls.update();
 
+  controls.update();
+  
+  // console.log(camera.position)
   // cube.rotation.x += 0.01;
   // cube.rotation.y += 0.01;
   // test rotations
@@ -152,9 +198,10 @@ scene.add(directionalLight);
 
 // SYNC state to visuals
 let myStateCube = new RubiksCube();
+let currentCubeState;
 
 function syncVisualCubeToState() {
-  console.log("rannnn");
+  // console.log("rannnn");
   const currCube = myStateCube.getCube();
 
   cubies.forEach((cubie) => {
@@ -171,21 +218,32 @@ function syncVisualCubeToState() {
         const colorCode = currCube[stateIdx]; // e.g. 0, 1, 2, 3, 4, 5
         const colorName = COLORS[colorCode];
 
-        console.log(key, colorCode);
+        // console.log(key, colorCode);
         mat.color.set(colorName); // repaint color
       }
     });
   });
 
   console.log(currCube);
+  console.log("Current cube state: ", myStateCube.getCube())
 }
 
 // event listeners
 
-keyboardControls(myStateCube, syncVisualCubeToState, cubies, scene);
+keyboardControls(myStateCube, syncVisualCubeToState, cubies, scene, camera, currAppState);
 
 // todo:
 // Tasks:
 
-// 2. orient camera to controls
-// 3. fully sync state to have a state variable.
+
+
+
+// scramble button
+
+const scrambleBtn = document.getElementById("scramble");
+
+scrambleBtn.addEventListener("click", () => {
+  console.log("scramble button clicked")
+  scrambleCube(20, myStateCube, syncVisualCubeToState, cubies, scene, currAppState);
+
+})

@@ -29,8 +29,27 @@ export const moveToCubiePosition = {
     "m": { axis: "x", value: 0, move: "moveM", angle: Math.PI / 2 },
     "M": { axis: "x", value: 0, move: "moveMDash", angle: -Math.PI / 2 },
     "e": { axis: "y", value: 0, move: "moveE", angle: Math.PI / 2 },
-    "E": { axis: "y", value: 0, move: "moveEDash", angle: -Math.PI / 2 }
+    "E": { axis: "y", value: 0, move: "moveEDash", angle: -Math.PI / 2 },
+    "s": { axis: "z", value: 0, move: "moveS", angle: -Math.PI / 2 },
+    "S": { axis: "z", value: 0, move: "moveSDash", angle: Math.PI / 2 }
  }
+
+ // Camera orientation relative map
+// export const CAMERA_ORIENTATIONS = {
+//     // no change same front face
+//     "+Z": { f: "f", b: "b", r: "r", l: "l" },
+//     // right side now front face
+//     "+X": { f: "r", b: "l", r: "b", l: "f" },
+//     // Top face now front face
+//     "+Y": { f: "u", b: "d", u: "b", d: "f" },
+    
+//     // back side now front face
+//     "-Z": { f: "b", b: "f", r: "l", l: "r" },
+//     // left side now front face
+//     "-X": { f: "l", b: "r", r: "f", l: "b" },
+//     // Bottom face now front face
+//     "-Y": { f: "d", b: "u", u: "f", d: "b" }
+// };
 
 
 // Right x = 1: yellow

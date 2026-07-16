@@ -1,28 +1,108 @@
 import * as THREE from "three";
 import { moveToCubiePosition } from "./rotating_animations";
 
-export function keyboardControls(cube, syncFunc, cubies, scene) {
-  let isAnimationRunning = false;
+
+
+// current faces with three js vectors and opposites map
+const PHYSICAL_FACES = [
+    { name: 'r', vector: new THREE.Vector3(1, 0, 0) }, // X = 1
+    { name: 'l', vector: new THREE.Vector3(-1, 0, 0) }, // X = -1
+    { name: 'u', vector: new THREE.Vector3(0, 1, 0) }, // Y = 1
+    { name: 'd', vector: new THREE.Vector3(0, -1, 0) }, // Y = -1
+    { name: 'f', vector: new THREE.Vector3(0, 0, 1) }, // Z = 1
+    { name: 'b', vector: new THREE.Vector3(0, 0, -1) } // Z = -1
+];
+
+// NOTE: m runs parallel to l and r on x axis, e runs parallel to u and d on y axis
+// and s runs parallel to f and b on z axis.
+const FACE_SLICE_LAYER_MAP = { r: 'm', l: 'm', u: 'e', d: 'e', f: 's', b: 's' }
+
+const OPPOSITES = { r: 'l', l: 'r', u: 'd', d: 'u', f: 'b', b: 'f' };
+
+// Helper function to find which physical face aligns closest with a screen vector
+function getClosestFace(screenVector) {
+    let closestFace = null;
+    // running max alignment
+    let maxAlignment = -Infinity;
+
+    // iterate through all faces, get dot product with current screen vector
+    for (const face of PHYSICAL_FACES) {
+        const alignment = face.vector.dot(screenVector); // Dot product calculation for how aligned current face is with the screen vector
+        if (alignment > maxAlignment) {
+            maxAlignment = alignment;
+            closestFace = face.name;
+        }
+    }
+    return closestFace;
+}
+
+// Dynamic translation system
+function translateLayer(pressedKey, camera) {
+    const isUpperCase = pressedKey === pressedKey.toUpperCase();
+    const key = pressedKey.toLowerCase();
+
+    // Extract the camera's real-time screen vectors from its transformation matrix
+    const cameraRight = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
+    const cameraUp    = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1).normalize();
+    const cameraFront = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 2).normalize();
+
+    // get front, up and right faces and opposites
+    const visualFront = getClosestFace(cameraFront);
+    const visualUp    = getClosestFace(cameraUp);
+    const visualRight = getClosestFace(cameraRight);
+    const visualBack  = OPPOSITES[visualFront];
+    const visualDown  = OPPOSITES[visualUp];
+    const visualLeft  = OPPOSITES[visualRight];
+
+    // map move keys f,b,u,d,l,r,m,s,e to visual faces
+    const screenToPhysicalMap = {
+        f: visualFront,
+        b: visualBack,
+        u: visualUp,
+        d: visualDown,
+        r: visualRight,
+        l: visualLeft,
+        // slice buttons
+        m: FACE_SLICE_LAYER_MAP[visualRight],
+        e: FACE_SLICE_LAYER_MAP[visualUp],
+        s: FACE_SLICE_LAYER_MAP[visualFront],
+    };
+
+    const logicalBase = screenToPhysicalMap[key] || key;
+
+    // Preserve the capital letters for dash moves
+    return isUpperCase ? logicalBase.toUpperCase() : logicalBase;
+}
+
+
+export function keyboardControls(cube, syncFunc, cubies, scene, camera, appState) {
+  
 
   window.addEventListener("keydown", (e) => {
-    if (isAnimationRunning) return;
+    if (appState.isRotating) return; // blocks interrupts
 
-    const moveInfo = moveToCubiePosition[e.key];
+    // translate key based on camera orientation and then access move information from map.
+    const newOrientedKey = translateLayer(e.key, camera)
+    const moveInfo = moveToCubiePosition[newOrientedKey];
 
     // if user presses a key thats in the helper map
     if (moveInfo) {
-      isAnimationRunning = true;
+      appState.isRotating = true;
+      console.log("CAMERA POSITION: ", camera.position)
 
       // helper function
       animateMove(moveInfo, cube, syncFunc, cubies, scene, () => {
-        isAnimationRunning = false;
+        appState.isRotating = false;
       });
+
+
     }
   });
 }
 
-function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComplete) {
+export function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComplete) {
   // current layer selected for move
+  console.log(cubies)
   const cubiesActiveLayer = cubies.filter((cubie) => {
     return cubie.position[moveInfo.axis] === moveInfo.value;
   });
@@ -77,4 +157,8 @@ function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComplete) {
 
   tick();
   // update state and screen
+  
 }
+
+
+// todo => how do the algorithms work with orientation of the cube? Is it better to have fixed sides to fixed moves to make algorithms work better?
