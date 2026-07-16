@@ -16,6 +16,7 @@ const PHYSICAL_FACES = [
 // NOTE: m runs parallel to l and r on x axis, e runs parallel to u and d on y axis
 // and s runs parallel to f and b on z axis.
 const FACE_SLICE_LAYER_MAP = { r: 'm', l: 'm', u: 'e', d: 'e', f: 's', b: 's' }
+// this map will use whatever physical face there is to successfully identify a slice layer.
 
 const OPPOSITES = { r: 'l', l: 'r', u: 'd', d: 'u', f: 'b', b: 'f' };
 
@@ -36,6 +37,17 @@ function getClosestFace(screenVector) {
     return closestFace;
 }
 
+// issue with slices. slices always spin in same direction despite camera orientation
+// recognize that m slice spins in the same direction as left, e slice spins in the same direction as down
+// and s slice spins in the same direction as front
+// to get slice to spin in same direction regardless of camera orientation we have to flip the direction i.e. "m" to "M" if
+// user expects opposites depending on the current physical face
+const SLICE_DIRECTIONS = { m: "l", e: "d", s: "f" }
+
+function flipSlice(sliceChar) {
+  return sliceChar === sliceChar.toLowerCase() ? sliceChar.toUpperCase() : sliceChar.toLowerCase();
+}
+
 // Dynamic translation system
 function translateLayer(pressedKey, camera) {
     const isUpperCase = pressedKey === pressedKey.toUpperCase();
@@ -54,24 +66,51 @@ function translateLayer(pressedKey, camera) {
     const visualDown  = OPPOSITES[visualUp];
     const visualLeft  = OPPOSITES[visualRight];
 
-    // map move keys f,b,u,d,l,r,m,s,e to visual faces
-    const screenToPhysicalMap = {
-        f: visualFront,
-        b: visualBack,
-        u: visualUp,
-        d: visualDown,
-        r: visualRight,
-        l: visualLeft,
-        // slice buttons
-        m: FACE_SLICE_LAYER_MAP[visualRight],
-        e: FACE_SLICE_LAYER_MAP[visualUp],
-        s: FACE_SLICE_LAYER_MAP[visualFront],
-    };
+    let currPhysicalSlice, direction;
 
-    const logicalBase = screenToPhysicalMap[key] || key;
+    if (['m', 'e', 's'].includes(key)) {
 
+      if (key === 'm') {
+        currPhysicalSlice =  FACE_SLICE_LAYER_MAP[visualRight];
+        direction = visualLeft
+      } else if (key === 'e') {
+        currPhysicalSlice = FACE_SLICE_LAYER_MAP[visualUp];
+        direction = visualDown;
+      } else if (key === 's') {
+        currPhysicalSlice = FACE_SLICE_LAYER_MAP[visualFront];
+        direction = visualFront;
+      }
+
+      const currPhysicalDirection = SLICE_DIRECTIONS[currPhysicalSlice];
+      
+
+      // flip physical slice if not spinning in right direction.
+      if (direction !== currPhysicalDirection) {
+        currPhysicalSlice = flipSlice(currPhysicalSlice)
+      }
+
+
+
+    } else {
+      // map move keys f,b,u,d,l,r,m,s,e to visual faces
+      const screenToPhysicalMap = {
+          f: visualFront,
+          b: visualBack,
+          u: visualUp,
+          d: visualDown,
+          r: visualRight,
+          l: visualLeft,
+          // slice buttons
+      };
+      currPhysicalSlice = screenToPhysicalMap[key] || key;
+
+    }
+
+
+
+    
     // Preserve the capital letters for dash moves
-    return isUpperCase ? logicalBase.toUpperCase() : logicalBase;
+    return isUpperCase ? flipSlice(currPhysicalSlice) : currPhysicalSlice
 }
 
 
