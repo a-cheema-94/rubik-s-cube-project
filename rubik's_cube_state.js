@@ -225,6 +225,99 @@ export class RubiksCube {
     this._anticlockwiseSwaps(5, 43, 21, 28);
   }
 
+  // DOUBLE LAYER ROTATIONS
+  moveFDouble() {
+    this.moveF();
+    this.moveS();
+  }
+  moveFDoubleDash() {
+    this.moveFDash();
+    this.moveSDash();
+  }
+  
+  moveBDouble() {
+    this.moveB();
+    this.moveSDash();
+  }
+  moveBDoubleDash() {
+    this.moveBDash();
+    this.moveS();
+  }
+
+  moveRDouble() {
+    this.moveR();
+    this.moveMDash();
+  }
+  moveRDoubleDash() {
+    this.moveRDash();
+    this.moveM();
+  }
+
+  moveLDouble() {
+    this.moveL();
+    this.moveM();
+  }
+  moveLDoubleDash() {
+    this.moveLDash();
+    this.moveMDash();
+  }
+
+  moveUDouble() {
+    this.moveU();
+    this.moveEDash();
+  }
+  moveUDoubleDash() {
+    this.moveUDash();
+    this.moveE();
+  }
+
+  moveDDouble() {
+    this.moveD();
+    this.moveE();
+  }
+  moveDDoubleDash() {
+    this.moveDDash();
+    this.moveEDash();
+  }
+
+  // x, y and z rotations
+  moveX() {
+    this.moveLDash();
+    this.moveMDash();
+    this.moveR();
+  }
+  moveXDash() {
+    this.moveL();
+    this.moveM();
+    this.moveRDash();
+  }
+
+  moveY() {
+    this.moveU();
+    this.moveEDash();
+    this.moveDDash();
+
+  }
+  moveYDash() {
+    this.moveUDash();
+    this.moveE();
+    this.moveD();
+
+  }
+
+  moveZ() {
+    this.moveF();
+    this.moveS();
+    this.moveBDash();
+  }
+
+  moveZDash() {
+    this.moveFDash();
+    this.moveSDash();
+    this.moveB();
+  }
+
+
   getCube() {
     return [...this.state]
   }

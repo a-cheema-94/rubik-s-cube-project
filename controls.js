@@ -13,6 +13,10 @@ const PHYSICAL_FACES = [
     { name: 'b', vector: new THREE.Vector3(0, 0, -1) } // Z = -1
 ];
 
+// console.log(PHYSICAL_FACES[0].vector.x)
+
+const VALID_OUTER_FACE_MOVES = ['r','l','u','d','f','b','R','L','U','D','F','B']
+
 // NOTE: m runs parallel to l and r on x axis, e runs parallel to u and d on y axis
 // and s runs parallel to f and b on z axis.
 const FACE_SLICE_LAYER_MAP = { r: 'm', l: 'm', u: 'e', d: 'e', f: 's', b: 's' }
@@ -48,6 +52,27 @@ function flipSlice(sliceChar) {
   return sliceChar === sliceChar.toLowerCase() ? sliceChar.toUpperCase() : sliceChar.toLowerCase();
 }
 
+// const PHYSICAL_FACES = [
+//     { name: 'r', vector: new THREE.Vector3(1, 0, 0) }, // X = 1
+//     { name: 'l', vector: new THREE.Vector3(-1, 0, 0) }, // X = -1
+//     { name: 'u', vector: new THREE.Vector3(0, 1, 0) }, // Y = 1
+//     { name: 'd', vector: new THREE.Vector3(0, -1, 0) }, // Y = -1
+//     { name: 'f', vector: new THREE.Vector3(0, 0, 1) }, // Z = 1
+//     { name: 'b', vector: new THREE.Vector3(0, 0, -1) } // Z = -1
+// ];
+
+// console.log(PHYSICAL_FACES[0].vector.x)
+
+
+const FACE_TO_AXIS = {
+  r: { axis: 'x', sign: 1 },
+  l: { axis: 'x', sign: -1 },
+  u: { axis: 'y', sign: 1 },
+  d: { axis: 'y', sign: -1 },
+  f: { axis: 'z', sign: 1 },
+  b: { axis: 'z', sign: -1 },
+}
+
 // Dynamic translation system
 function translateLayer(pressedKey, camera) {
     const isUpperCase = pressedKey === pressedKey.toUpperCase();
@@ -66,10 +91,33 @@ function translateLayer(pressedKey, camera) {
     const visualDown  = OPPOSITES[visualUp];
     const visualLeft  = OPPOSITES[visualRight];
 
-    let currPhysicalSlice, direction;
+    let finalTranslatedKey;
+    
+    // rotation around x axis: visualRight
+    // rotation around y axis: visualUp
+    // rotation around z axis: visualFront
+    if (['x', 'y', 'z'].includes(key)) {
+      let currPhysicalAxis;
+      if (key === 'x') {
+        currPhysicalAxis = visualRight;
+      } else if (key === 'y') {
+        currPhysicalAxis = visualUp;
+      } else if (key === 'z') {
+        currPhysicalAxis = visualFront;
+      }
 
-    if (['m', 'e', 's'].includes(key)) {
+      const axisMapping = FACE_TO_AXIS[currPhysicalAxis]
+      finalTranslatedKey = axisMapping.axis;
 
+      // reverse negative axis direction
+      if (axisMapping.sign === -1) {
+        finalTranslatedKey = flipSlice(finalTranslatedKey);
+      }
+
+
+    } else if (['m', 'e', 's'].includes(key)) {
+      let currPhysicalSlice, direction;
+      
       if (key === 'm') {
         currPhysicalSlice =  FACE_SLICE_LAYER_MAP[visualRight];
         direction = visualLeft
@@ -82,11 +130,11 @@ function translateLayer(pressedKey, camera) {
       }
 
       const currPhysicalDirection = SLICE_DIRECTIONS[currPhysicalSlice];
-      
+      finalTranslatedKey = currPhysicalSlice;
 
       // flip physical slice if not spinning in right direction.
       if (direction !== currPhysicalDirection) {
-        currPhysicalSlice = flipSlice(currPhysicalSlice)
+        finalTranslatedKey = flipSlice(finalTranslatedKey)
       }
 
 
@@ -102,7 +150,7 @@ function translateLayer(pressedKey, camera) {
           l: visualLeft,
           // slice buttons
       };
-      currPhysicalSlice = screenToPhysicalMap[key] || key;
+      finalTranslatedKey = screenToPhysicalMap[key] || key;
 
     }
 
@@ -110,18 +158,37 @@ function translateLayer(pressedKey, camera) {
 
     
     // Preserve the capital letters for dash moves
-    return isUpperCase ? flipSlice(currPhysicalSlice) : currPhysicalSlice
+    return isUpperCase ? flipSlice(finalTranslatedKey) : finalTranslatedKey
 }
 
 
 export function keyboardControls(cube, syncFunc, cubies, scene, camera, appState) {
-  
 
+  // cannot use alt key (keyboard shortcuts) so use w + move key to trigger double layer move
+  // have another event listener to disable holding "w" variable boolean when user is not holding it.
+  let isHoldingW = false;
+  
+  
+  
   window.addEventListener("keydown", (e) => {
+    if (e.code === "KeyW") {
+      isHoldingW = true;
+      return;
+    }
+    
+    console.log("HOLDING W VARIABLE", isHoldingW)
+
     if (appState.isRotating) return; // blocks interrupts
 
     // translate key based on camera orientation and then access move information from map.
-    const newOrientedKey = translateLayer(e.key, camera)
+    let newOrientedKey = translateLayer(e.key, camera)
+
+    if (isHoldingW && VALID_OUTER_FACE_MOVES.includes(newOrientedKey)) {
+      newOrientedKey = newOrientedKey + "w"
+    }
+
+    console.log("KEY CODE: ", newOrientedKey)
+
     const moveInfo = moveToCubiePosition[newOrientedKey];
 
     // if user presses a key thats in the helper map
@@ -136,14 +203,27 @@ export function keyboardControls(cube, syncFunc, cubies, scene, camera, appState
 
 
     }
+
+    // when user doesn't hold w -> normal moves.
+    window.addEventListener("keyup", (e) => {
+    if (e.code === "KeyW") {
+      isHoldingW = false;
+      console.log("IS HOLDING W: ", isHoldingW)
+    }
+  })
+
   });
+
+  
 }
 
 export function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComplete) {
   // current layer selected for move
   console.log(cubies)
+
+  // now need to select multiple layers for double layer moves and x and y rotations
   const cubiesActiveLayer = cubies.filter((cubie) => {
-    return cubie.position[moveInfo.axis] === moveInfo.value;
+    return moveInfo.values.includes(Math.round(cubie.position[moveInfo.axis]));
   });
 
   // group layer to "invisible" pivot at (0,0,0)
@@ -178,6 +258,8 @@ export function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComp
       // add cubies back to scene and remove pivot
       cubiesActiveLayer.forEach((cubie) => scene.add(cubie));
       scene.remove(pivot);
+
+      console.log("MOVE TRIGGERED: ", moveInfo.move)
 
       cubeState[moveInfo.move]();
       syncFunc();
