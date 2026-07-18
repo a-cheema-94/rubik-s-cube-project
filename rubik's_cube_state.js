@@ -20,6 +20,7 @@ export class RubiksCube {
       1, 1, 1, 1, 1, 1, 1, 1, 1,  // R (36-44)
       3, 3, 3, 3, 3, 3, 3, 3, 3   // B (45-53)
     ]
+
   }
 
   // clockwise and anticlockwise rotations, swap colors when given position indexes.

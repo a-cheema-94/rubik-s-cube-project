@@ -1,0 +1,15 @@
+neural network for oll:
+input: 21 * 6 length array of binary numbers
+each 1 of 21 faces have 6 associated numbers corresponding to its potential color
+output: probability distribution: 58 length array each corresponding to a different oll case
+we have 1 solved state + 57 other cases
+
+* we care about finding if the colors match the middle color => then we can identify the pattern
+
+neural network for pll:
+input: 21 * 6 length array of binary numbers
+each 1 of 21 faces have 6 associated numbers corresponding to its potential color
+output: probability distribution: 22 length array each corresponding to a different oll case
+we have 1 solved state + 21 other cases
+
+* we need to look at each of the 12 colors below the top layer (as this would be solved as one color).
