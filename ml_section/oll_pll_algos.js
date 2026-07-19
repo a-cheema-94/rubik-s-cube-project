@@ -1,13 +1,13 @@
-const LAST_LAYER_ALGO_STORE = {
+export const LAST_LAYER_ALGO_STORE = {
   oll: {
-    // cube solved
+    // cube solved -> top layer stickers all same color, but adjacent ones can be different
     0: { name: "cube_solved", algo: "" },
 
     // solved cross
     1: { name: "solved_cross_1", algo: "R U R' U R U2 R'" },
     2: { name: "solved_cross_2", algo: "R U2 R' U' R U' R'" },
-    3: { name: "solved_cross_3", algo: "R U R' U R U' R' U R U2 R'" },
-    4: { name: "solved_cross_4", algo: "R U2 (R2 U') (R2 U') R2 U2 R" },
+    3: { name: "solved_cross_3", algo: "R U R' U R U' R' U R U2 R'" }, // apply to solved cube + y to get shape
+    4: { name: "solved_cross_4", algo: "R U2 (R2 U') (R2 U') R2 U2 R" }, 
     5: { name: "solved_cross_5", algo: "(R U R) D (R' U' R) D' R2" },
     6: { name: "solved_cross_6", algo: "R2 D' (R U' R') D (R U R)" },
     7: { name: "solved_cross_7", algo: "R2 D (R' U2 R) D' (R' U2 R')" },
