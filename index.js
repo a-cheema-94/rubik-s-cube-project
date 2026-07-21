@@ -199,6 +199,7 @@ scene.add(directionalLight);
 // SYNC state to visuals
 let myStateCube = new RubiksCube();
 let currentCubeState;
+console.log("STARTING STATE: ", myStateCube.getCube());
 
 function syncVisualCubeToState() {
   // console.log("rannnn");

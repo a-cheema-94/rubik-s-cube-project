@@ -1,135 +1,144 @@
-
-
-//     export const COLORS = {
-//   0: WHITE,
-//   1: YELLOW,
-//   2: BLUE,
-//   3: GREEN,
-//   4: ORANGE,
-//   5: RED
-// }
-
-import { LAST_LAYER_ALGO_STORE } from "./oll_pll_algos"
-
-const INVERSES = {
-  // oll
-  "solved_cross_1": "solved_cross_2",
-  "solved_cross_2": "solved_cross_1",
-  "solved_cross_3": "solved_cross_3", // y
-  "solved_cross_4": "solved_cross_4", 
-  "solved_cross_5": "solved_cross_6", // + y
-  "solved_cross_6": "solved_cross_5", // + y2
-  "solved_cross_7": "solved_cross_6", // + y2
-
-  "t_shape_1": "p_shape_1",
-  "t_shape-2": "fish_shape_1",
-
-  "block_shape_1": "lightning_shape_1",
-  "block_shape_2": "lightning_shape_2", // + y2
-
-  "edge_only_1": "edge_only_2",
-  "edge_only_2": "edge_only_1",
-
-  "lightning_shape_1": "block_shape_1",
-  "lightning_shape_2": "block_shape_2", // + y2
-  "lightning_shape_3": "block_shape_1", // + y'
-  "lightning_shape_4": "block_shape_2", // y
-  "lightning_shape_5": "p_shape_4",
-  "lightning_shape_6": "p_shape_3", // y2
-  
-  "p_shape_1": "t_shape_1",
-  "p_shape_2": "t_shape_1", // y
-  "p_shape_3": "lightning_shape_5", // y2
-  "p_shape_4": "lightning_shape_5",
-  
-  "c_shape_1": "p_shape_2", // y'
-  "c_shape_2": "fish_shape_1", // y
-  
-  "fish_shape_1": "t_shape_2",
-  "fish_shape_2": "fish_shape_1",
-  "fish_shape_3": "l_shape_3",
-  "fish_shape_4": "lightning_shape_2", // y2
-
-  "w_shape_1": "p_shape_3", // y
-  "w_shape_2": "p_shape_4", // y
-
-  "hook_shape_1": "line_shape_1",
-  "hook_shape_2": "hook_shape_1",
-  "hook_shape_3": "hook_shape_3", // y
-  "hook_shape_4": "hook_shape_4", // y'
-  "hook_shape_5": "hook_shape_6",
-  "hook_shape_6": "hook_shape_5",
-
-
-  "line_shape_1": "hook_shape_1",
-  "line_shape_2": "line_shape_2", // y2
-  "line_shape_3": "hook_shape_3", // y
-  "line_shape_4": "hook_shape_3", // y
-
-  "l_shape_1": "lightning_shape_1",
-  "l_shape_2": "lightning_shape_2",
-  "l_shape_3": "fish_shape_3",
-  "l_shape_4": "fish_shape_4", // y'
-
-
-  "awkward_shape_1": "t_shape_2", // y2
-  "awkward_shape_2": "p_shape_1", // y'
-  "awkward_shape_3": "p_shape_2",
-  "awkward_shape_4": "t_shape_1",
-
-  "dot_case_1": "dot_case_2",
-  "dot_case_2": "dot_case_2", // y2
-  "dot_case_3": "dot_case_4",
-  "dot_case_4": "dot_case_3",
-  "dot_case_5": "dot_case_4", // y
-  "dot_case_6": "dot_case_7",
-  "dot_case_7": "dot_case_6",
-  "dot_case_8": "dot_case_8",
-
-  // pll
-  "Ua Perm": "Ub Perm", // y2
-  "Ub Perm": "Ua Perm",
-  "H Perm": "Ub Perm", // y
-  "Z Perm": "Z Perm", // y
-  
-  "Aa Perm": "Ab Perm",
-  "Ab Perm": "Aa Perm",
-  "E Perm": "E Perm",
-
-  "T Perm": "T Perm",
-  "F Perm": "F Perm",
-  "Jb Perm": "Jb Perm", // y
-  "Ja/L Perm": "Ja/L Perm",
-  "Ra Perm": "Ra Perm", // y'
-  "Rb Perm": "Rb Perm", // y'
-
-  "Y Perm": "Y Perm",
-  "Na Perm": "Na Perm",
-  "Nb Perm": "Nb Perm",
-  "V Perm": "V Perm",
-  
-  "Ga Perm": "Gb Perm",
-  "Gb Perm": "Ga Perm",
-  "Gc Perm": "Gd Perm",
-  "Gd Perm": "Gc Perm",
-}
+import { LAST_LAYER_ALGO_STORE } from "./oll_pll_algos.js"
+import { COLORS, RubiksCube } from "../rubik's_cube_state.js";
+import { colorToFacesNormalizer } from "./colorNormalizer.js";
 
 
 const SAMPLE_SOLVED_CUBE = [
-      4, 4, 4, 4, 4, 4, 4, 4, 4,  // U (0-8)
-      2, 2, 2, 2, 2, 2, 2, 2, 2,  // F (9-17)
-      5, 5, 5, 5, 5, 5, 5, 5, 5,  // D (18-26)
-      0, 0, 0, 0, 0, 0, 0, 0, 0,  // L (27-35)
-      1, 1, 1, 1, 1, 1, 1, 1, 1,  // R (36-44)
-      3, 3, 3, 3, 3, 3, 3, 3, 3   // B (45-53)
-    ]
-
-
+  4, 4, 4, 4, 4, 4, 4, 4, 4,  // U (0-8)
+  2, 2, 2, 2, 2, 2, 2, 2, 2,  // F (9-17)
+  5, 5, 5, 5, 5, 5, 5, 5, 5,  // D (18-26)
+  0, 0, 0, 0, 0, 0, 0, 0, 0,  // L (27-35)
+  1, 1, 1, 1, 1, 1, 1, 1, 1,  // R (36-44)
+  3, 3, 3, 3, 3, 3, 3, 3, 3   // B (45-53)
+]
 
 
 // steps for generating sample data for model.
-  // colors fixed to indices in state. How to split off? -> show configurations of state array -> unsolved last layer with the rest solved for each color?
+  // Indices fixed to faces?
   // apply all algorithm and find inverses and relationships. - DONE
   // how to split top layer from whole cube
   // work out what configurations to apply for a varied training set.
 
+ 
+
+function getUpperFaceColor(cubeState) {
+  const upper_face_idx = 4;
+  return cubeState[upper_face_idx];
+}
+
+const cube = new RubiksCube();
+
+
+console.log("============START=============")
+console.log(getUpperFaceColor(cube.getCube()))
+console.log("CURR CUBE STATE: ", cube.getCube())
+console.log("============END=============")
+
+const LAST_LAYER_INDICES = [
+  0,1,2,3,4,5,6,7,8, // upper layer
+
+  9,10,11, // adjacent face pieces
+  36,37,38, // adjacent right pieces
+  27,28,29, // adjacent left pieces
+  45,46,47, // adjacent back pieces
+];
+
+
+// generate data
+// initialize a new cube state
+// apply CFOP algos to it
+// need permutations -> four different states with the U face (U U' U2 and nothing) and four different views with (y, y' y2 and nothing)
+  // -> makes network more robust to recognize algorithm from different angles. i.e. 4x4 = 16 variations
+  
+// 
+
+function oneHotEncode (arr) {
+  let finalArr = new Array(arr.length).fill(null);
+  arr.forEach((sticker, idx) => {
+    let newStickerArr = new Array(5).fill(0)
+
+    if(sticker >= 0 && sticker <= 4) {
+      newStickerArr[sticker] = 1
+    } else {
+      console.warn(`Invalid value detected!: ${sticker}`)
+    }
+    finalArr[idx] = newStickerArr
+  })
+
+  let finalFinalArr = []
+  finalArr.forEach(binArr => {
+    finalFinalArr.push(...binArr)
+  })
+
+  return finalFinalArr;
+}
+
+
+
+class SyntheticDataGenerator {
+  constructor(stateCube, normalizer, oneHotEncode) {
+    this.cube = stateCube;
+    this.normalizer = normalizer;
+    this.oneHotEncode = oneHotEncode;
+    this.dataset = [];
+  }
+
+  generateDataSamples(algoSet, targetClass) {
+    const upperPermutations = ["", "U", "U2", "U'"]
+    const viewPermutations = ["", "y", "y2", "y'"]
+
+    for (const yMove of viewPermutations) {
+      for (const uMove of upperPermutations) {
+        // reset cube before each iteration
+        this.cube.reset();
+
+        // apply moves to cube state array in reveres to get target algo pattern
+        this.cube.applyMoves(algoSet, true);
+
+        // apply permutations -> apply a upper layer move and vary the view after
+        if (uMove) this.cube.applyMoves(uMove);
+        if (yMove) this.cube.applyMoves(yMove);
+
+
+        // get top layer stickers for training
+        const topLayerColors = LAST_LAYER_INDICES.map(idx => this.cube.getCube()[idx])
+
+        // normalize topLayerColors -> map colors to faces
+        const normalizedColors = this.normalizer(topLayerColors, this.cube.getCube())
+
+        // one hot encoding
+        const encodedData = this.oneHotEncode(normalizedColors)
+
+        // put data in dataset
+        this.dataset.push({ data: encodedData, target: targetClass })
+      }
+    }
+  }
+}
+
+const test_data_generation = new SyntheticDataGenerator(cube, colorToFacesNormalizer, oneHotEncode)
+
+test_data_generation.generateDataSamples("R U R' U R U2 R'", "solved_cross_1")
+
+console.log("TEST DATA SET: ", test_data_generation.dataset)
+
+
+
+
+// const originalState = [
+//       4, 4, 4, 4, 4, 4, 4, 4, 4,  // U (0-8)
+//       2, 2, 2, 2, 2, 2, 2, 2, 2,  // F (9-17)
+//       5, 5, 5, 5, 5, 5, 5, 5, 5,  // D (18-26)
+//       0, 0, 0, 0, 0, 0, 0, 0, 0,  // L (27-35)
+//       1, 1, 1, 1, 1, 1, 1, 1, 1,  // R (36-44)
+//       3, 3, 3, 3, 3, 3, 3, 3, 3   // B (45-53)
+// ]
+
+// const sampleUpperLayer = [
+//       2, 4, 0, 4, 4, 4, 1,
+//       4, 4, 2, 1, 1, 3, 2,
+//       4, 0, 0, 4, 3, 3, 4
+//     ]
+
+
+// console.log(colorToFacesNormalizer(sampleUpperLayer, originalState))

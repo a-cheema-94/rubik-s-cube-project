@@ -1,4 +1,4 @@
-import { BLUE, GREEN, ORANGE, RED, WHITE, YELLOW } from "./cube_colors";
+import { BLUE, GREEN, ORANGE, RED, WHITE, YELLOW } from "./cube_colors.js";
 
 export const COLORS = {
   0: WHITE,
@@ -322,13 +322,75 @@ export class RubiksCube {
   getCube() {
     return [...this.state]
   }
+
+  reset() {
+    this.state = [
+      4, 4, 4, 4, 4, 4, 4, 4, 4,  // U (0-8)
+      2, 2, 2, 2, 2, 2, 2, 2, 2,  // F (9-17)
+      5, 5, 5, 5, 5, 5, 5, 5, 5,  // D (18-26)
+      0, 0, 0, 0, 0, 0, 0, 0, 0,  // L (27-35)
+      1, 1, 1, 1, 1, 1, 1, 1, 1,  // R (36-44)
+      3, 3, 3, 3, 3, 3, 3, 3, 3   // B (45-53)
+    ];
+  }
+
+  applyMoves(algoString, reverse = false) {
+    if (!algoString) return;
+
+    // clean up whitespace for each string when splitting into a moves array
+    let cubeMoves = algoString.trim().split(/\s+/);
+
+    // if reverse flag set to true => reverse string and apply inverse moves
+    if (reverse) {
+      cubeMoves = cubeMoves.toReversed().map(move => {
+        // cases: ', 2, plain
+        if (move.includes("'")) return move.replace("'", "");
+        if (move.includes("2")) return move;
+        return move + "'"
+      })
+    }
+
+    // make a map that maps characters to class moves, e.g. "R" maps to .moveR()
+    const charToMovesMap = {
+      'U': 'moveU', "U'": 'moveUDash', 'Uw': 'moveUDouble', "Uw'": 'moveUDoubleDash', 'u': 'moveUDouble', "u'": 'moveUDoubleDash',
+      'D': 'moveD', "D'": 'moveDDash', 'Dw': 'moveDDouble', "Dw'": 'moveDDoubleDash', 'd': 'moveDDouble', "d'": 'moveDDoubleDash',
+      'L': 'moveL', "L'": 'moveLDash', 'Lw': 'moveLDouble', "Lw'": 'moveLDoubleDash', 'l': 'moveLDouble', "l'": 'moveLDoubleDash',
+      'R': 'moveR', "R'": 'moveRDash', 'Rw': 'moveRDouble', "Rw'": 'moveRDoubleDash', 'r': 'moveRDouble', "r'": 'moveRDoubleDash',
+      'F': 'moveF', "F'": 'moveFDash', 'Fw': 'moveFDouble', "Fw'": 'moveFDoubleDash', 'f': 'moveFDouble', "f'": 'moveFDoubleDash',
+      'B': 'moveB', "B'": 'moveBDash', 'Bw': 'moveBDouble', "Bw'": 'moveBDoubleDash', 'b': 'moveBDouble', "b'": 'moveBDoubleDash',
+      'M': 'moveM', "M'": 'moveMDash',
+      'E': 'moveE', "E'": 'moveEDash',
+      'S': 'moveS', "S'": 'moveSDash',
+      'x': 'moveX', "x'": 'moveXDash',
+      'y': 'moveY', "y'": 'moveYDash',
+      'z': 'moveZ', "z'": 'moveZDash'
+    }
+
+    // iterate through each move and apply -> taking into account double moves with "2"
+    for (const move of cubeMoves) {
+      const baseMove = move.replace("2", "")
+
+      const moveMethodName = charToMovesMap[baseMove]
+
+      const isDouble = move.includes("2");
+      if(this[moveMethodName]) {
+        this[moveMethodName]()
+        if (isDouble) {
+          this[moveMethodName]();
+        }
+      } else {
+        console.log(`Illegal Move!! Try again fool!`)
+      }
+    }
+
+  }
 }
 
 const rCube = new RubiksCube();
 
 rCube.moveD()
 
-console.log(rCube.getCube())
+// console.log(rCube.getCube())
 
 
 // todo => refactor code into different files and functions and then import into index.js.

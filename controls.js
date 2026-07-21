@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { moveToCubiePosition } from "./rotating_animations";
+import { COLORS } from "./rubik's_cube_state";
 
 
 
@@ -148,7 +149,6 @@ function translateLayer(pressedKey, camera) {
           d: visualDown,
           r: visualRight,
           l: visualLeft,
-          // slice buttons
       };
       finalTranslatedKey = screenToPhysicalMap[key] || key;
 
@@ -199,6 +199,7 @@ export function keyboardControls(cube, syncFunc, cubies, scene, camera, appState
       // helper function
       animateMove(moveInfo, cube, syncFunc, cubies, scene, () => {
         appState.isRotating = false;
+        console.log("TOP LAYER COLOR: ", getTopLayerColor(cube.getCube()))
       });
 
 
@@ -217,6 +218,11 @@ export function keyboardControls(cube, syncFunc, cubies, scene, camera, appState
   
 }
 
+export function getTopLayerColor(cubeState) {
+  const upper_layer_center = 4;
+  return COLORS[cubeState[upper_layer_center]]
+}
+
 export function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComplete) {
   // current layer selected for move
   console.log(cubies)
@@ -226,7 +232,6 @@ export function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComp
     return moveInfo.values.includes(Math.round(cubie.position[moveInfo.axis]));
   });
 
-  // group layer to "invisible" pivot at (0,0,0)
   const pivot = new THREE.Group();
   scene.add(pivot);
 

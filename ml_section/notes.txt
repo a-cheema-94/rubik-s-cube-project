@@ -13,3 +13,120 @@ output: probability distribution: 22 length array each corresponding to a differ
 we have 1 solved state + 21 other cases
 
 * we need to look at each of the 12 colors below the top layer (as this would be solved as one color).
+
+
+
+const INVERSES = {
+  // oll
+  "solved_cross_1": "*B / solved_cross_2",
+  "solved_cross_2": "*B / solved_cross_1",
+  "solved_cross_3": "*B / solved_cross_3", // y
+  "solved_cross_4": "*B / solved_cross_4", 
+  "solved_cross_5": "*B / solved_cross_6", // + y
+  "solved_cross_6": "*B / solved_cross_5", // + y2
+  "solved_cross_7": "*B / solved_cross_6", // + y2
+
+  "t_shape_1": "*B / p_shape_1",
+  "t_shape-2": "*B / fish_shape_1",
+
+  "block_shape_1": "*B / lightning_shape_1",
+  "block_shape_2": "*B / lightning_shape_2", // + y2
+
+  "edge_only_1": "*B / edge_only_2",
+  "edge_only_2": "*B / edge_only_1",
+
+  "lightning_shape_1": "*B / block_shape_1",
+  "lightning_shape_2": "*B / block_shape_2", // + y2
+  "lightning_shape_3": "*B / block_shape_1", // + y'
+  "lightning_shape_4": "*B / block_shape_2", // y
+  "lightning_shape_5": "*B / p_shape_4",
+  "lightning_shape_6": "*B / p_shape_3", // y2
+  
+  "p_shape_1": "*B / t_shape_1",
+  "p_shape_2": "*B / t_shape_1", // y
+  "p_shape_3": "*B / lightning_shape_5", // y2
+  "p_shape_4": "*B / lightning_shape_5",
+  
+  "c_shape_1": "*B / p_shape_2", // y'
+  "c_shape_2": "*B / fish_shape_1", // y
+  
+  "fish_shape_1": "*B / t_shape_2",
+  "fish_shape_2": "*B / fish_shape_1",
+  "fish_shape_3": "*B / l_shape_3",
+  "fish_shape_4": "*B / lightning_shape_2", // y2
+
+  "w_shape_1": "*B / p_shape_3", // y
+  "w_shape_2": "*B / p_shape_4", // y
+
+  "hook_shape_1": "*B / line_shape_1",
+  "hook_shape_2": "*B / hook_shape_1",
+  "hook_shape_3": "*B / hook_shape_3", // y
+  "hook_shape_4": "*B / hook_shape_4", // y'
+  "hook_shape_5": "*B / hook_shape_6",
+  "hook_shape_6": "*B / hook_shape_5",
+
+
+  "line_shape_1": "*B / hook_shape_1",
+  "line_shape_2": "*B / line_shape_2", // y2
+  "line_shape_3": "*B / hook_shape_3", // y
+  "line_shape_4": "*B / hook_shape_3", // y
+
+  "l_shape_1": "*B / lightning_shape_1",
+  "l_shape_2": "*B / lightning_shape_2",
+  "l_shape_3": "*B / fish_shape_3",
+  "l_shape_4": "*B / fish_shape_4", // y'
+
+
+  "awkward_shape_1": "*B / t_shape_2", // y2
+  "awkward_shape_2": "*B / p_shape_1", // y'
+  "awkward_shape_3": "*B / p_shape_2",
+  "awkward_shape_4": "*B / t_shape_1",
+
+  "dot_case_1": "*B / dot_case_2",
+  "dot_case_2": "*B / dot_case_2", // y2
+  "dot_case_3": "*B / dot_case_4",
+  "dot_case_4": "*B / dot_case_3",
+  "dot_case_5": "*B / dot_case_4", // y
+  "dot_case_6": "*B / dot_case_7",
+  "dot_case_7": "*B / dot_case_6",
+  "dot_case_8": "*B / dot_case_8",
+
+  // pll
+  "Ua Perm": "*B / Ub Perm", // y2
+  "Ub Perm": "*B / Ua Perm",
+  "H Perm": "*B / Ub Perm", // y
+  "Z Perm": "*B / Z Perm", // y
+  
+  "Aa Perm": "*B / Ab Perm",
+  "Ab Perm": "*B / Aa Perm",
+  "E Perm": "*B / E Perm",
+
+  "T Perm": "*B / T Perm",
+  "F Perm": "*B / F Perm",
+  "Jb Perm": "*B / Jb Perm", // y
+  "Ja/L Perm": "*B / Ja/L Perm",
+  "Ra Perm": "*B / Ra Perm", // y'
+  "Rb Perm": "*B / Rb Perm", // y'
+
+  "Y Perm": "*B / Y Perm",
+  "Na Perm": "*B / Na Perm",
+  "Nb Perm": "*B / Nb Perm",
+  "V Perm": "*B / V Perm",
+  
+  "Ga Perm": "*B / Gb Perm",
+  "Gb Perm": "*B / Ga Perm",
+  "Gc Perm": "*B / Gd Perm",
+  "Gd Perm": "*B / Gc Perm",
+}
+
+
+
+
+
+Why have two separate neural networks for each of pll and oll? 
+The network might get confused learning two separate concepts, since these two methods
+need to be applied at two different stages of the cube it would be better, more faster to train both
+separately.
+
+Why have x, y, z rotations and not just have hard coded sides front, back, up, down, left, right?
+The algorithms require them and that logic, (i.e. translating a 21 sticker color array representing the top layer to a 21 sticker array that represents the dominant color as the up face with the other colors translated into other faces.)
