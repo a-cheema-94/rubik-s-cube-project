@@ -1,3 +1,6 @@
 node_modules/
 longTodos.txt
 testing_state.js
+ml_section/.venv/
+ml_section/data/
+ml_section/neural_network_notes.txt

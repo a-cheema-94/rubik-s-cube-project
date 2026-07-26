@@ -21,6 +21,8 @@ export class RubiksCube {
       3, 3, 3, 3, 3, 3, 3, 3, 3   // B (45-53)
     ]
 
+    this.errorAlgos = new Set()
+
   }
 
   // clockwise and anticlockwise rotations, swap colors when given position indexes.
@@ -337,6 +339,8 @@ export class RubiksCube {
   applyMoves(algoString, reverse = false) {
     if (!algoString) return;
 
+    console.log("algo string: ", algoString)
+
     // clean up whitespace for each string when splitting into a moves array
     let cubeMoves = algoString.trim().split(/\s+/);
 
@@ -380,6 +384,7 @@ export class RubiksCube {
         }
       } else {
         console.log(`Illegal Move!! Try again fool!`)
+        this.errorAlgos.add(algoString)
       }
     }
 

@@ -94,7 +94,7 @@ export const LAST_LAYER_ALGO_STORE = {
 
     // edges only
     1: { name: "Ua Perm", algo: "R U R' U R' U' R2 U' R' U R' U R " },
-    2: { name: "Ub Perm", algo: "R' U R' U' R3 U' R' U R U R2" },
+    2: { name: "Ub Perm", algo: "R' U R' U' R' U' R' U R U R2" },
     3: { name: "H Perm", algo: "M2 U' M2 U2 M2 U' M2" },
     4: { name: "Z Perm", algo: "M' U' M2 U' M2 U' M' U2 M2" },
 
@@ -115,13 +115,13 @@ export const LAST_LAYER_ALGO_STORE = {
     14: { name: "Y Perm", algo: "F R U' R' U' R U R' F' R U R' U' R' F R F'" },
     15: { name: "Na Perm", algo: "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'" },
     16: { name: "Nb Perm", algo: "R' U R U' R' F' U' F R U R' U' R U' f R f'" },
-    17: { name: "V Perm", algo: "R' U R' U' R D' R' D R'U D' R2 U' R2 D R2" },
+    17: { name: "V Perm", algo: "R' U R' U' R D' R' D R' U D' R2 U' R2 D R2" },
 
     // G Perms
     18: { name: "Ga Perm", algo: "R2 U R' U R' U' R U' R2 D U' R' U R D'" },
     19: { name: "Gb Perm", algo: "D R' U' R U D' R2 U R' U R U' R U' R2" },
     20: { name: "Gc Perm", algo: "D R2 U' R U' R U R' U R2 D' U R U' R'" },
-    21: { name: "Gd Perm", algo: "R U R' U' D R2 U' R U'R' U R' U R2 D'" },
+    21: { name: "Gd Perm", algo: "R U R' U' D R2 U' R U' R' U R' U R2 D'" },
   },
 };
 

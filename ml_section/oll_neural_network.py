@@ -1,0 +1,62 @@
+import tensorflow as tf
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import numpy as np
+# need to load oll csv file into dataframe using pandas
+oll_df = pd.read_csv("./data/oll_training_data.csv")
+
+# split into features (X) and labels (y)
+X = oll_df.drop(columns="label").values
+y = oll_df["label"].values
+
+
+
+# does the current considered sticker match the top layer color
+
+# input 105 element binary array, output 58 element array using the softmax activation function for a probability distribution.
+# each index in the output represents a potential algorithm that should be used.
+# use ReLU for each of the hidden layer activations
+# loss function: categorical cross entropy (diff between predicted prob distribution and actual labels)
+
+# shuffle and split into training and validation data using Scikit-Learn:
+X_train, X_val, y_train, y_val = train_test_split(
+  X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+oll_model = tf.keras.Sequential([
+  tf.keras.layers.Input(shape=(105,)),
+
+  tf.keras.layers.Dense(units=128, activation="relu"),
+  tf.keras.layers.Dense(units=64, activation="relu"),
+  tf.keras.layers.Dense(units=58, activation="softmax"),
+])
+
+oll_model.compile(
+  optimizer="adam",
+  loss = tf.keras.losses.SparseCategoricalCrossentropy(),
+  metrics=['accuracy'],
+)
+
+oll_model.fit(x=X_train, y=y_train, validation_data=(X_val, y_val), epochs=150, batch_size=16)
+
+# Returns total loss and accuracy (0.0 to 1.0)
+loss, accuracy = oll_model.evaluate(X_train, y_train, verbose=0)
+print(f"Overall Model Accuracy: {accuracy * 100:.2f}%")
+print(f"Overall Model Loss: {loss * 100:.2f}%")
+
+
+# checking
+
+
+# Grab the first 105-bit array and its actual label
+sample_input = X[151:152]  # Slice keeps the 2D tensor shape (1, 105)
+actual_label = y[151]
+
+# Run prediction
+probabilities = oll_model.predict(sample_input, verbose=0)
+predicted_class = np.argmax(probabilities)
+confidence = np.max(probabilities) * 100
+
+print(f"Actual Label:    {actual_label}")
+print(f"Predicted Class: {predicted_class}")
+print(f"Confidence:      {confidence:.2f}%")

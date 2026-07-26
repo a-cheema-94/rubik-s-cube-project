@@ -1,4 +1,4 @@
-import { LAST_LAYER_ALGO_STORE } from "./oll_pll_algos.js"
+// import { LAST_LAYER_ALGO_STORE } from "./oll_pll_algos.js"
 import { COLORS, RubiksCube } from "../rubik's_cube_state.js";
 import { colorToFacesNormalizer } from "./colorNormalizer.js";
 
@@ -52,10 +52,11 @@ const LAST_LAYER_INDICES = [
   
 // 
 
-function oneHotEncode (arr) {
+export function oneHotEncode (arr) {
   let finalArr = new Array(arr.length).fill(null);
   arr.forEach((sticker, idx) => {
     let newStickerArr = new Array(5).fill(0)
+    // five possible sides for each sticker, U, L, R, F, B, no D face since only considering the top layer.
 
     if(sticker >= 0 && sticker <= 4) {
       newStickerArr[sticker] = 1
@@ -75,7 +76,7 @@ function oneHotEncode (arr) {
 
 
 
-class SyntheticDataGenerator {
+export class SyntheticDataGenerator {
   constructor(stateCube, normalizer, oneHotEncode) {
     this.cube = stateCube;
     this.normalizer = normalizer;
@@ -92,7 +93,9 @@ class SyntheticDataGenerator {
         // reset cube before each iteration
         this.cube.reset();
 
-        // apply moves to cube state array in reveres to get target algo pattern
+        // because we use relative positions in the color normalizer, we don't need to worry about mixing up the cube with different colors after reset, the neural network will only have face positions, regardless of what colors there are.
+
+        // apply moves to cube state array in reverse to get target algo pattern
         this.cube.applyMoves(algoSet, true);
 
         // apply permutations -> apply a upper layer move and vary the view after
@@ -120,7 +123,7 @@ const test_data_generation = new SyntheticDataGenerator(cube, colorToFacesNormal
 
 test_data_generation.generateDataSamples("R U R' U R U2 R'", "solved_cross_1")
 
-console.log("TEST DATA SET: ", test_data_generation.dataset)
+console.log("TEST DATA SET LENGTH: ", test_data_generation.dataset)
 
 
 
