@@ -11,9 +11,7 @@ pll_df = pd.read_csv("./data/pll_training_data.csv")
 X = pll_df.drop(columns="label").values
 y = pll_df["label"].values
 
-X_train, X_val, y_train, y_val = train_test_split(
-  X, y, test_size=0.2, random_state=42, stratify=y
-)
+
 
 pll_model = tf.keras.Sequential([
   tf.keras.layers.Input(shape=(105,)),
@@ -29,10 +27,10 @@ pll_model.compile(
   metrics=['accuracy'],
 )
 
-pll_model.fit(x=X_train, y=y_train, validation_data=(X_val, y_val), epochs=150, batch_size=16)
+pll_model.fit(x=X, y=y, epochs=150, batch_size=16)
 
 # Returns total loss and accuracy (0.0 to 1.0)
-loss, accuracy = pll_model.evaluate(X_train, y_train, verbose=0)
+loss, accuracy = pll_model.evaluate(X, y, verbose=0)
 print(f"Overall Model Accuracy: {accuracy * 100:.2f}%")
 print(f"Overall Model Loss: {loss * 100:.2f}%")
 

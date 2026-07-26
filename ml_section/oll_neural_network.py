@@ -1,7 +1,9 @@
 import tensorflow as tf
 import pandas as pd
-from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import train_test_split
 import numpy as np
+
+
 # need to load oll csv file into dataframe using pandas
 oll_df = pd.read_csv("./data/oll_training_data.csv")
 
@@ -18,10 +20,6 @@ y = oll_df["label"].values
 # use ReLU for each of the hidden layer activations
 # loss function: categorical cross entropy (diff between predicted prob distribution and actual labels)
 
-# shuffle and split into training and validation data using Scikit-Learn:
-X_train, X_val, y_train, y_val = train_test_split(
-  X, y, test_size=0.2, random_state=42, stratify=y
-)
 
 oll_model = tf.keras.Sequential([
   tf.keras.layers.Input(shape=(105,)),
@@ -37,10 +35,12 @@ oll_model.compile(
   metrics=['accuracy'],
 )
 
-oll_model.fit(x=X_train, y=y_train, validation_data=(X_val, y_val), epochs=150, batch_size=16)
+oll_model.fit(x=X, y=y, epochs=150, batch_size=16)
+
+oll_model.save("oll_model.keras")
 
 # Returns total loss and accuracy (0.0 to 1.0)
-loss, accuracy = oll_model.evaluate(X_train, y_train, verbose=0)
+loss, accuracy = oll_model.evaluate(X, y, verbose=0)
 print(f"Overall Model Accuracy: {accuracy * 100:.2f}%")
 print(f"Overall Model Loss: {loss * 100:.2f}%")
 

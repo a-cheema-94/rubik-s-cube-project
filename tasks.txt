@@ -1,6 +1,0 @@
--> generate dataset of sample 
-
-
-// BoxGeometry colors array for 6 faces: [ 0: Right side (+ve X), 1: Left side (-ve X), 2: Top side (+ve  Y), 3: Bottom side (-ve Y), 4: Front side: (+ve z), 5: Back side: (-ve z) ]
-
-
