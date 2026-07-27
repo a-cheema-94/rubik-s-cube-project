@@ -16,6 +16,7 @@ import { COORDINATES_TO_STATE_INDEXES } from "./state_to_visual";
 import { COLORS, RubiksCube } from "./rubik's_cube_state";
 import { keyboardControls } from "./controls";
 import { scrambleCube } from "./scramble";
+import { testModelLoading } from "./testing_models";
 
 // variable to lock screen when sequence of moves (scramble) in progress
 const currAppState = { isRotating: false }
@@ -233,11 +234,6 @@ function syncVisualCubeToState() {
 
 keyboardControls(myStateCube, syncVisualCubeToState, cubies, scene, camera, currAppState);
 
-// todo:
-// Tasks:
-
-
-
 
 // scramble button
 
@@ -248,3 +244,7 @@ scrambleBtn.addEventListener("click", () => {
   scrambleCube(20, myStateCube, syncVisualCubeToState, cubies, scene, currAppState);
 
 })
+
+
+// tests
+testModelLoading();
