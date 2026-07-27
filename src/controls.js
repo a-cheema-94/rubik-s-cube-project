@@ -285,6 +285,3 @@ export function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComp
   // update state and screen
   
 }
-
-
-// todo => how do the algorithms work with orientation of the cube? Is it better to have fixed sides to fixed moves to make algorithms work better?

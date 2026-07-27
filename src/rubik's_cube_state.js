@@ -325,6 +325,10 @@ export class RubiksCube {
     return [...this.state]
   }
 
+  setCube(newCube) {
+    this.state = newCube
+  }
+
   reset() {
     this.state = [
       4, 4, 4, 4, 4, 4, 4, 4, 4,  // U (0-8)
@@ -400,6 +404,4 @@ rCube.moveD()
 
 // todo => refactor code into different files and functions and then import into index.js.
 // todo => test rotations with testing scripts amongst other stuff.
-// todo => m and e button clicks sort out and s rotation
-// todo => need x and y rotations for oll and pll and need double layer moves -> how to classify double layer moves.
 // todo => save state to local storage, so previous state of cube is saved.
