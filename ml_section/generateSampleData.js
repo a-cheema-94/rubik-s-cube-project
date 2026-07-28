@@ -1,5 +1,5 @@
 // import { LAST_LAYER_ALGO_STORE } from "./oll_pll_algos.js"
-import { COLORS, RubiksCube } from "../rubik's_cube_state.js";
+import { COLORS, RubiksCube } from "../src/rubik's_cube_state.js";
 import { colorToFacesNormalizer } from "./colorNormalizer.js";
 
 
@@ -34,7 +34,7 @@ console.log(getUpperFaceColor(cube.getCube()))
 console.log("CURR CUBE STATE: ", cube.getCube())
 console.log("============END=============")
 
-const LAST_LAYER_INDICES = [
+export const LAST_LAYER_INDICES = [
   0,1,2,3,4,5,6,7,8, // upper layer
 
   9,10,11, // adjacent face pieces
@@ -119,11 +119,11 @@ export class SyntheticDataGenerator {
   }
 }
 
-const test_data_generation = new SyntheticDataGenerator(cube, colorToFacesNormalizer, oneHotEncode)
+// const test_data_generation = new SyntheticDataGenerator(cube, colorToFacesNormalizer, oneHotEncode)
 
-test_data_generation.generateDataSamples("R U R' U R U2 R'", "solved_cross_1")
+// test_data_generation.generateDataSamples("R U R' U R U2 R'", "solved_cross_1")
 
-console.log("TEST DATA SET LENGTH: ", test_data_generation.dataset)
+// console.log("TEST DATA SET LENGTH: ", test_data_generation.dataset)
 
 
 

@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { TrackballControls } from "three/addons/controls/TrackballControls.js";
-// import { generateCubies } from './generate_cubies'
 
 import {
   RED,
@@ -16,7 +15,9 @@ import { COORDINATES_TO_STATE_INDEXES } from "./state_to_visual";
 import { COLORS, RubiksCube } from "./rubik's_cube_state";
 import { keyboardControls } from "./controls";
 import { scrambleCube } from "./scramble";
-import { testModelLoading } from "./testing_models";
+import { loadModels, handlePredictions } from "./testing_models";
+import { playAlgorithm } from "./algoStringMoves";
+
 
 // variable to lock screen when sequence of moves (scramble) in progress
 const currAppState = { isRotating: false }
@@ -237,7 +238,7 @@ keyboardControls(myStateCube, syncVisualCubeToState, cubies, scene, camera, curr
 
 // scramble button
 
-const scrambleBtn = document.getElementById("scramble");
+const scrambleBtn = document.getElementById("btn-scramble");
 
 scrambleBtn.addEventListener("click", () => {
   console.log("scramble button clicked")
@@ -245,10 +246,34 @@ scrambleBtn.addEventListener("click", () => {
 
 })
 
-// model tests
-// testModelLoading();
+// Models 
 
-// oll model trigger button
+const { ollModel, pllModel } = await loadModels();
+
+// buttons
+const ollBtn = document.getElementById("btn-predict-oll")
+const pllBtn = document.getElementById("btn-predict-pll")
+
+ollBtn.addEventListener("click", async () => {
+  const res = await handlePredictions(myStateCube, ollModel, pllModel, "oll")
+  console.log(res)
+})
 
 
-// pll model trigger button
+pllBtn.addEventListener("click", async () => {
+  const res = await handlePredictions(myStateCube, ollModel, pllModel, "pll")
+  console.log(res)
+})
+
+
+// using algo strings to initiate moves.
+
+const algoStringInput = document.getElementById("algo-string-input");
+
+algoStringInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    // call function
+    console.log("PRESSED ENTER IN INPUT FIELD: ", algoStringInput.value);
+    playAlgorithm(algoStringInput.value, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
+  }
+})
