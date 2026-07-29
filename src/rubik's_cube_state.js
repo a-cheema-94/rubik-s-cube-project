@@ -343,7 +343,7 @@ export class RubiksCube {
   applyMoves(algoString, reverse = false) {
     if (!algoString) return;
 
-    console.log("algo string: ", algoString)
+    console.log("apply moves algo string: ", algoString)
 
     // clean up whitespace for each string when splitting into a moves array
     let cubeMoves = algoString.trim().split(/\s+/);

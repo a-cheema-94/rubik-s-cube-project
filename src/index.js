@@ -255,13 +255,13 @@ const ollBtn = document.getElementById("btn-predict-oll")
 const pllBtn = document.getElementById("btn-predict-pll")
 
 ollBtn.addEventListener("click", async () => {
-  const res = await handlePredictions(myStateCube, ollModel, pllModel, "oll")
+  const res = await handlePredictions(myStateCube, ollModel, pllModel, "oll", camera)
   console.log(res)
 })
 
 
 pllBtn.addEventListener("click", async () => {
-  const res = await handlePredictions(myStateCube, ollModel, pllModel, "pll")
+  const res = await handlePredictions(myStateCube, ollModel, pllModel, "pll", camera)
   console.log(res)
 })
 
@@ -277,3 +277,5 @@ algoStringInput.addEventListener("keydown", (e) => {
     playAlgorithm(algoStringInput.value, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
   }
 })
+
+// todo => input field a bit buggy, interfering with normal keystrokes and sometimes not mapping moves correctly -> look through CFOP map and see about conditional rendering of input field with button click.

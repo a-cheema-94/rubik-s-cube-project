@@ -1,6 +1,7 @@
 import * as tf from '@tensorflow/tfjs';
-import { validateCubeForModel } from './validate_cube_state';
+import { calculatePreYRotation, validateCubeForModel } from './validate_cube_state';
 import { LAST_LAYER_ALGO_STORE } from '../ml_section/oll_pll_algos';
+import { getFaceFacingCamera } from './getFacingCameraHelper.js';
 
 export async function loadModels() {
   console.log("Attempting to load ML models...");
@@ -32,9 +33,9 @@ export async function loadModels() {
   }
 }
 
-export async function handlePredictions(cube, ollModel, pllModel, userModelRequest) {
+export async function handlePredictions(cube, ollModel, pllModel, userModelRequest, camera) {
   
-  const { encodedData, state: actualCubeState } = validateCubeForModel(cube);
+  const { encodedData, state: actualCubeState, currCube } = validateCubeForModel(cube);
 
   if (actualCubeState === "none") {
     alert("Cube is ready for model, solve first two layers.")
@@ -63,9 +64,39 @@ export async function handlePredictions(cube, ollModel, pllModel, userModelReque
 
   // use state variable to extract either oll or pll list of algos
   const currAlgoStore = LAST_LAYER_ALGO_STORE[actualCubeState]
+
   const predictedAlgo = currAlgoStore[predictionIdx];
   console.log(`PREDICTION: ${userModelRequest.toUpperCase()} Case: `, predictedAlgo.name)
+  
+  // ? Here is where to input logic about correct face for algo -> attach pre y rotations to algo. Call the function here.
+  const possiblePreRotation = calculatePreYRotation(currCube, predictedAlgo["normalizedPattern"], userModelRequest);
+  
+  
+  console.log("PREDICTED ALGO NAME: ", predictedAlgo["name"])
 
-  return predictedAlgo;
+  console.log("IS THERE A PRE ROTATION??: ", possiblePreRotation)
+
+  // Map how many Y rotations are needed to turn the camera's front face into logical Front
+const cameraYOffsetMap = {
+  "F": "",
+  "R": "y'",
+  "B": "y2",
+  "L": "y"
+};
+
+const cameraFacingFace = getFaceFacingCamera(camera);
+const cameraOffset = cameraYOffsetMap[cameraFacingFace];
+
+// Combine camera orientation + setup orientation + model pre-y rotation
+let finalAlgo = predictedAlgo["algo"];
+if (possiblePreRotation) finalAlgo = `${possiblePreRotation} ${finalAlgo}`;
+if (cameraOffset) finalAlgo = `${cameraOffset} ${finalAlgo}`;
+// if (physicalSetupMove) finalAlgo = `${physicalSetupMove} ${finalAlgo}`;
+
+
+  return finalAlgo;
+
+  // console.log("ALGO NAME: ", predictedAlgo["name"])
+  // return predictedAlgo["algo"]
 
 }

@@ -12,7 +12,7 @@ export function colorToFacesNormalizer(upperLayer, fullCube) {
   const mappings = new Map()
   let finalNormalizedArray = []
   
-  // we want to map colors to faces
+  // use the center indices to find current colors and map those colors to faces with 
   // colors: (0: white, 1: yellow, 2: blue, 3: green, 4: orange, 5: red)
   // faces: (0: Up, 1: Front, 2: Right, 3: Back, 4: Left)
   let currFace = 0;
@@ -21,8 +21,9 @@ export function colorToFacesNormalizer(upperLayer, fullCube) {
     currFace ++;
   }
 
-  console.log(mappings)
+  console.log("NORMALIZER GENERATED MAPPINGS: ", mappings)
 
+  // change each color in upper layer to its' corresponding position mapping
   for (const sticker of upperLayer) {
     finalNormalizedArray.push(mappings.get(sticker))
   }
