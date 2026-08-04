@@ -7,3 +7,6 @@ ml_section/onnx_converter
 ml_section/neural_network_notes.txt
 rough_tests/
 ml_section/oll_model.keras
+
+
+ml_section/neuralNetworkClass.js

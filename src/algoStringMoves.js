@@ -15,7 +15,6 @@ const CFOP_TO_MAP = {
 };
 
 
-// todo => moves fixed to current state face will not translate to different orientations.
 
 export async function playAlgorithm(algoString, cubeState, syncFunc, cubies, scene, appState) {
     if (!algoString || appState.isRotating) return;

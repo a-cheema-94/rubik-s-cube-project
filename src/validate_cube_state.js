@@ -3,9 +3,6 @@ import { LAST_LAYER_INDICES, oneHotEncode } from "../ml_section/generateSampleDa
 import { colorToFacesNormalizer } from "../ml_section/colorNormalizer.js";
 
 
-// todo => don't know current face to apply oll algorithm once outputted by model. Need some way of knowing if should rotate to match the pattern -> OLL: just need to match upper layer color, normalizer not working since it is matching all colors.
-// todo => Re use normalized array again?
-
 export function validateCubeForModel(cube) {
   
   const orientedF2LSolvedCube = verifyF2lAndOrientCube(cube);
@@ -103,59 +100,67 @@ function verifyF2LSolved(orientedCube) {
 
 
 
-
-
-
-
-
-
-
-
-
 export function calculatePreYRotation(cube, normalizedPattern, modelType) {
-  // clone cube
-  const dummyCube = new RubiksCube();
-  dummyCube.setCube([...cube.getCube()]);
-
-  const centerColorRef = cube.getCube()
-
+  // moves
   const yMoves = ["", "y", "y2", "y'"];
-  const yRotations = ["", "moveY", "moveY2", "moveYDash"];
+  const uMoves = ["", "U", "U2", "U'"];
 
-  for (let i=0; i<4; i++) {
-    // i=0 => no move, i=1 => y, i=2 => y2, i=3 => y'
-    if(i > 0) {
-      dummyCube.moveY();
-    }
+  // double for loop for every permutation of y and U rotations.
+  for (let u=0; u<4; u++) {
+    for (let y=0; y<4; y++) {
+      // clone cube
+      const dummyCube = new RubiksCube();
+      dummyCube.setCube([...cube.getCube()])
 
-    const topLayer = LAST_LAYER_INDICES.map(idx => dummyCube.getCube()[idx]);
+
+      // apply the y or U rotations to dummyCube if y or U are > 0
+      if (u === 1) dummyCube.moveU();
+      if (u === 2) {
+        dummyCube.moveU();
+        dummyCube.moveU();
+      }
+      if (u === 3) dummyCube.moveUDash();
+
+      if (y === 1) dummyCube.moveY();
+      if (y === 2) {
+        dummyCube.moveY();
+        dummyCube.moveY();
+      }
+      if (y === 3) dummyCube.moveYDash();
+
+      const topLayer = LAST_LAYER_INDICES.map(idx => dummyCube.getCube()[idx]);
     console.log("CURRENT TOP LAYER PRE Y: ", topLayer)
 
-    const normalizedTopLayer = colorToFacesNormalizer(topLayer, centerColorRef);
+    const normalizedTopLayer = colorToFacesNormalizer(topLayer, dummyCube.getCube());
 
     console.log("NORMALIZED LAYER PRE Y: \n", normalizedTopLayer)
     // check is normalized top layer for current cube is the same as the one in predicted algorithm
 
-    // todo => handle model type matching here
     let isMatched = false;
     if (modelType === 'oll') {
       console.log("OLL MODEL TYPE!!!!")
       isMatched = isOllMatch(normalizedTopLayer, normalizedPattern)
     } else if (modelType === 'pll') {
+      console.log("HARD CODED NORMALIZED PATTERN:")
+      console.log(normalizedPattern)
+      console.log("NORMALIZED TOP LAYER:")
+      console.log(normalizedTopLayer)
       isMatched = normalizedTopLayer.every((val, idx) => val === normalizedPattern[idx]);
     }
 
-    console.log("INDEX: ", i)
     console.log("IS MATCHED", isMatched)
 
-    if (isMatched) return yMoves[i]
+    if (isMatched) return [uMoves[u], yMoves[y]].filter(Boolean).join(" ");
 
+    }
   }
 
   return "";
 }
 
 
+
+// only care about up face i.e. 0 values => in normalized logic: 0: upper layer.
 function isOllMatch(arr1, arr2) {
   
   console.log("ARRAY ONE: ", arr1 )

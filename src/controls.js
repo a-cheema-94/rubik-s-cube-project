@@ -53,17 +53,6 @@ function flipSlice(sliceChar) {
   return sliceChar === sliceChar.toLowerCase() ? sliceChar.toUpperCase() : sliceChar.toLowerCase();
 }
 
-// const PHYSICAL_FACES = [
-//     { name: 'r', vector: new THREE.Vector3(1, 0, 0) }, // X = 1
-//     { name: 'l', vector: new THREE.Vector3(-1, 0, 0) }, // X = -1
-//     { name: 'u', vector: new THREE.Vector3(0, 1, 0) }, // Y = 1
-//     { name: 'd', vector: new THREE.Vector3(0, -1, 0) }, // Y = -1
-//     { name: 'f', vector: new THREE.Vector3(0, 0, 1) }, // Z = 1
-//     { name: 'b', vector: new THREE.Vector3(0, 0, -1) } // Z = -1
-// ];
-
-// console.log(PHYSICAL_FACES[0].vector.x)
-
 
 const FACE_TO_AXIS = {
   r: { axis: 'x', sign: 1 },
@@ -86,7 +75,7 @@ function translateLayer(pressedKey, camera) {
 
     // get front, up and right faces and opposites
     const visualFront = getClosestFace(cameraFront);
-    const visualUp    = getClosestFace(cameraUp);
+    const visualUp    = getClosestFace(cameraUp); 
     const visualRight = getClosestFace(cameraRight);
     const visualBack  = OPPOSITES[visualFront];
     const visualDown  = OPPOSITES[visualUp];
@@ -169,16 +158,22 @@ export function keyboardControls(cube, syncFunc, cubies, scene, camera, appState
   let isHoldingW = false;
   
   
-  
   window.addEventListener("keydown", (e) => {
+
+    // allows user to hold w with no behavior expect in conjunction with other moves.
     if (e.code === "KeyW") {
       isHoldingW = true;
+      console.log("RETURNED COS OF HOLDING W")
       return;
     }
     
     console.log("HOLDING W VARIABLE", isHoldingW)
+    if(isHoldingW) console.log("KEY AFTER HOLDING W ", e.key)
 
-    if (appState.isRotating) return; // blocks interrupts
+    if (appState.isRotating) {
+      console.log("DON'T INTERRUPT ME!!!")
+      return;
+    } // blocks interrupts
 
     // translate key based on camera orientation and then access move information from map.
     let newOrientedKey = translateLayer(e.key, camera)
@@ -199,33 +194,28 @@ export function keyboardControls(cube, syncFunc, cubies, scene, camera, appState
       // helper function
       animateMove(moveInfo, cube, syncFunc, cubies, scene, () => {
         appState.isRotating = false;
-        console.log("TOP LAYER COLOR: ", getTopLayerColor(cube.getCube()))
       });
 
 
     }
 
-    // when user doesn't hold w -> normal moves.
-    window.addEventListener("keyup", (e) => {
-    if (e.code === "KeyW") {
-      isHoldingW = false;
-      console.log("IS HOLDING W: ", isHoldingW)
-    }
-  })
-
+    
   });
-
+  
+  // when user doesn't hold w -> normal moves.
+  window.addEventListener("keyup", (e) => {
+  if (e.code === "KeyW") {
+    isHoldingW = false;
+    console.log("IS HOLDING W: ", isHoldingW)
+  }
+})
   
 }
 
-export function getTopLayerColor(cubeState) {
-  const upper_layer_center = 4;
-  return COLORS[cubeState[upper_layer_center]]
-}
 
 export function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComplete) {
   // current layer selected for move
-  console.log(cubies)
+  console.log("CUBIES INSIDE ANIMATE FUNCTION: ", cubies)
 
   // now need to select multiple layers for double layer moves and x and y rotations
   const cubiesActiveLayer = cubies.filter((cubie) => {
@@ -246,6 +236,7 @@ export function animateMove(moveInfo, cubeState, syncFunc, cubies, scene, onComp
   // velocity of animation
   const speed = 0.08;
   let direction = 1;
+  // set for anticlockwise rotations
   if (finalAngle < 0) {
     direction *= -1;
   }

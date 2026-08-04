@@ -47,56 +47,21 @@ const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
 // Set the size of the renderer to match your canvas boundaries
 renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
-// Optional: Set a nice background color (e.g., a dark slate gray)
+// background color (e.g., a dark slate gray)
 renderer.setClearColor("#161616", 1);
 
 // ... (camera and renderer setup) ...
 
-// Initialize OrbitControls
+// Initialize TrackballControls
 const controls = new TrackballControls(camera, renderer.domElement);
 
-// Optional: Smooth the movement (damping)
+// Smooth the movement (damping)
 controls.rotateSpeed = 2.0;
 controls.panSpeed = 2;
 controls.dynamicDampingFactor = 0.3;
-controls.keys = ["KeyA", "KeyB", "KeyC"]
 
 // all cubies stored here.
 const cubies = [];
-
-
-// OPTION: mouse clicking for rotations
-
-// const raycaster = new THREE.Raycaster();
-// const mouse = new THREE.Vector2();
-
-// renderer.domElement.addEventListener("click", (e) => {
-//   console.log("cube clicked")
-//   // set mouse coordinates
-//   const rectangle = renderer.domElement.getBoundingClientRect()
-//   console.log(rectangle)
-
-//   mouse.x = ((e.clientX - rectangle.left) / rectangle.width) * 2 - 1;
-//   mouse.y = -((e.clientY - rectangle.top) / rectangle.height) * 2 + 1;
-
-//   // fire ray through mouse position
-//   raycaster.setFromCamera(mouse, camera);
-
-
-//   const intersects = raycaster.intersectObjects(cubies, true);
-
-
-//   if (intersects.length > 0) {
-//     const clickedCubie = intersects[0].object.position;
-
-//     console.log(clickedCubie)
-
-//     const clickedCubieDirection = intersects[0].normal;
-//     console.log(clickedCubieDirection)
-//   }
-// })
-
-
 
 
 
@@ -124,13 +89,11 @@ function generateCubies() {
         if (z === 1) faceColors[4] = BLUE; // Front face is outside
         if (z === -1) faceColors[5] = GREEN; // Back face is outside
 
-        // console.log(`Coordinates: ${x}, ${y}, ${z}, ${faceColors}}`)
+        console.log(`Coordinates: ${x}, ${y}, ${z}, "FACE COLORS: ", ${faceColors}}`)
 
         // double check with Desmos 3D calculator
 
-        // console.log("COLOR ARRAYS: ", faceColors)
-
-        // 3. Convert our color choices into an array of 6 Three.js materials
+        // Convert our color choices into an array of 6 Three.js materials
         const cubieMaterials = faceColors.map((color) => {
           return new THREE.MeshStandardMaterial({
             color: color,
@@ -139,12 +102,13 @@ function generateCubies() {
           });
         });
 
-        const geometry = new THREE.BoxGeometry(0.9, 0.9, 0.9);
+        const geometry = new THREE.BoxGeometry(0.95, 0.95, 0.95);
         // const material = new THREE.MeshStandardMaterial({ color: "#444444" })
         const cubie = new THREE.Mesh(geometry, cubieMaterials);
 
         cubie.position.set(x, y, z);
 
+        // shadow stuff
         cubie.castShadow = true;
         cubie.receiveShadow = true;
 
@@ -170,15 +134,6 @@ function animate() {
 
   controls.update();
   
-  // console.log(camera.position)
-  // cube.rotation.x += 0.01;
-  // cube.rotation.y += 0.01;
-  // test rotations
-  // const layerToMove = cubies.filter(cubie => cubie.position.x === 0)
-  // const pivot = new THREE.Group()
-  // scene.add(pivot)
-  // layerToMove.forEach(cubie => pivot.attach(cubie))
-  // pivot.rotateX(0.02)
 
   // This is the magic line that actually draws the scene from the camera's perspective
   renderer.render(scene, camera);
@@ -200,7 +155,6 @@ scene.add(directionalLight);
 
 // SYNC state to visuals
 let myStateCube = new RubiksCube();
-let currentCubeState;
 console.log("STARTING STATE: ", myStateCube.getCube());
 
 function syncVisualCubeToState() {
@@ -227,8 +181,8 @@ function syncVisualCubeToState() {
     });
   });
 
-  console.log(currCube);
-  console.log("Current cube state: ", myStateCube.getCube())
+  console.log("CURR CUBE VARIABLE", currCube);
+  console.log("CURR CUBE STATE: ", myStateCube.getCube())
 }
 
 // event listeners
@@ -277,5 +231,3 @@ algoStringInput.addEventListener("keydown", (e) => {
     playAlgorithm(algoStringInput.value, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
   }
 })
-
-// todo => input field a bit buggy, interfering with normal keystrokes and sometimes not mapping moves correctly -> look through CFOP map and see about conditional rendering of input field with button click.

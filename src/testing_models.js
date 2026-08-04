@@ -7,8 +7,8 @@ export async function loadModels() {
   console.log("Attempting to load ML models...");
 
   try {
-    // 1. Load the OLL model
-    // Note the path: Vite maps ./public/models directly to /models
+    // Load the OLL model
+    
     const ollModel = await tf.loadLayersModel('/models/oll_model/model.json');
     console.log("OLL Model loaded successfully!");
     
@@ -16,7 +16,7 @@ export async function loadModels() {
     console.log("OLL Architecture:");
     ollModel.summary(); 
 
-    // 2. Load the PLL model
+    // Load the PLL model
     const pllModel = await tf.loadLayersModel('/models/pll_model/model.json');
     console.log("PLL Model loaded successfully!");
     
@@ -38,7 +38,7 @@ export async function handlePredictions(cube, ollModel, pllModel, userModelReque
   const { encodedData, state: actualCubeState, currCube } = validateCubeForModel(cube);
 
   if (actualCubeState === "none") {
-    alert("Cube is ready for model, solve first two layers.")
+    alert("Cube is not ready for model, solve first two layers.")
   }
 
   // we compare which button the user clicked against the actual state of the cube.
@@ -84,6 +84,7 @@ const cameraYOffsetMap = {
   "L": "y"
 };
 
+// todo -> sort out camera orientation logic
 const cameraFacingFace = getFaceFacingCamera(camera);
 const cameraOffset = cameraYOffsetMap[cameraFacingFace];
 
