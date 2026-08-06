@@ -2,7 +2,7 @@ import * as tf from "@tensorflow/tfjs";
 import {
   calculatePreRotations,
   validateCubeForModel,
-} from "./validate_cube_state";
+} from "./validate_cube_state.js";
 import { LAST_LAYER_ALGO_STORE } from "../ml_section/oll_pll_algos";
 import { getFaceFacingCamera } from "./getFacingCameraHelper.js";
 
@@ -88,7 +88,7 @@ export async function handlePredictions(
     predictedAlgo.name,
   );
 
-  // ? Here is where to input logic about correct face for algo -> attach pre y rotations to algo. Call the function here.
+  // ? Here is where to input logic about correct face for algo -> attach pre y or U rotations to algo. Call the function here.
   const possiblePreRotation = calculatePreRotations(
     currCube,
     predictedAlgo["normalizedPattern"],
@@ -107,7 +107,7 @@ export async function handlePredictions(
     L: "y",
   };
 
-  // todo -> sort out camera orientation logic
+  
   const cameraFacingFace = getFaceFacingCamera(camera);
   const cameraOffset = cameraYOffsetMap[cameraFacingFace];
 

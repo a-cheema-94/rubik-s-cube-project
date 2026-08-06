@@ -23,7 +23,7 @@ export function getFaceFacingCamera(camera) {
     if (dot > maxDot) {
       maxDot = dot;
       facingFace = face;
-    }
+    } 
   }
 
   // get the highest dot product and then return face associated with it.

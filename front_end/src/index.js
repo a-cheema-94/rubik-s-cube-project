@@ -17,10 +17,12 @@ import { keyboardControls } from "./controls";
 import { scrambleCube } from "./scramble";
 import { loadModels, handlePredictions } from "./testing_models";
 import { playAlgorithm } from "./algoStringMoves";
+import { solveCubeStraight } from "./straightSolver";
 
 
 // variable to lock screen when sequence of moves (scramble) in progress
 const currAppState = { isRotating: false }
+
 
 // pull canvas from html
 const canvas = document.querySelector("canvas");
@@ -230,4 +232,15 @@ algoStringInput.addEventListener("keydown", (e) => {
     console.log("PRESSED ENTER IN INPUT FIELD: ", algoStringInput.value);
     playAlgorithm(algoStringInput.value, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
   }
+})
+
+
+// solve cube button
+
+const solveCubeBtn = document.getElementById("btn-solve-cube");
+
+solveCubeBtn.addEventListener("click", async () => {
+  // call function
+  console.log("here.....solved....")
+  await solveCubeStraight(myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
 })

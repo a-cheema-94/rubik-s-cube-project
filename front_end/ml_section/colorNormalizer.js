@@ -1,6 +1,6 @@
 // model needs to recognize algo pattern in relation to top face and must be color variant,
-// e.g. a white middle line upper layer pattern should fall under the same category as a yellow middle line upper layer patter.
-// input => 21 array upper layer with colors, output 21 array 
+// e.g. a white middle line upper layer pattern should fall under the same category as a yellow middle line upper layer pattern.
+// input => 21 array upper layer with colors, output 21 normalized array 
 
 const CUBE_CENTER_INDICES = {
   "U": 4, "F": 13, "R": 40, "B": 49, "L": 31

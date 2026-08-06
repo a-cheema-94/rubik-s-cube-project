@@ -1,0 +1,187 @@
+OLL
+
+import tensorflow as tf
+import pandas as pd
+
+# 1. Load data
+oll_df = pd.read_csv("./data/oll_training_data.csv")
+
+# 2. Split features and labels
+X = oll_df.drop(columns="label").values
+y = oll_df["label"].values
+
+# 3. Build model
+oll_model = tf.keras.Sequential([
+  tf.keras.layers.Input(shape=(105,)),
+  tf.keras.layers.Dense(units=128, activation="relu"),
+  tf.keras.layers.Dense(units=64, activation="relu"),
+  tf.keras.layers.Dense(units=58, activation="softmax"),
+])
+
+oll_model.compile(
+  optimizer="adam",
+  loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+  metrics=['accuracy'],
+)
+
+# 4. Train on 100% of the data (no validation split!)
+# The model will see all 16 angles/alignments for every algorithm.
+oll_model.fit(x=X, y=y, epochs=150, batch_size=16)
+
+# 5. Evaluate on the full dataset
+loss, accuracy = oll_model.evaluate(X, y, verbose=0)
+print(f"Overall Model Accuracy: {accuracy * 100:.2f}%")
+
+
+PLL 
+
+import tensorflow as tf
+import pandas as pd
+
+# 1. Load data
+pll_df = pd.read_csv("./data/pll_training_data.csv")
+
+# 2. Split features and labels
+X = pll_df.drop(columns="label").values
+y = pll_df["label"].values
+
+# 3. Build model
+pll_model = tf.keras.Sequential([
+  tf.keras.layers.Input(shape=(105,)),
+  tf.keras.layers.Dense(units=128, activation="relu"),
+  tf.keras.layers.Dense(units=64, activation="relu"),
+  tf.keras.layers.Dense(units=58, activation="softmax"),
+])
+
+pll_model.compile(
+  optimizer="adam",
+  loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+  metrics=['accuracy'],
+)
+
+# 4. Train on 100% of the data (no validation split!)
+# The model will see all 16 angles/alignments for every algorithm.
+pll_model.fit(x=X, y=y, epochs=150, batch_size=16)
+
+# 5. Evaluate on the full dataset
+loss, accuracy = pll_model.evaluate(X, y, verbose=0)
+print(f"Overall Model Accuracy: {accuracy * 100:.2f}%")
+
+
+OLL FINAL RES:
+
+import tensorflow as tf
+import pandas as pd
+# from sklearn.model_selection import train_test_split
+import numpy as np
+
+
+# need to load oll csv file into dataframe using pandas
+oll_df = pd.read_csv("./data/oll_training_data.csv")
+
+# split into features (X) and labels (y)
+X = oll_df.drop(columns="label").values
+y = oll_df["label"].values
+
+
+
+# does the current considered sticker match the top layer color
+
+# input 105 element binary array, output 58 element array using the softmax activation function for a probability distribution.
+# each index in the output represents a potential algorithm that should be used.
+# use ReLU for each of the hidden layer activations
+# loss function: categorical cross entropy (diff between predicted prob distribution and actual labels)
+
+
+oll_model = tf.keras.Sequential([
+  tf.keras.layers.Input(shape=(105,)),
+
+  tf.keras.layers.Dense(units=128, activation="relu"),
+  tf.keras.layers.Dense(units=64, activation="relu"),
+  tf.keras.layers.Dense(units=58, activation="softmax"),
+])
+
+oll_model.compile(
+  optimizer="adam",
+  loss = tf.keras.losses.SparseCategoricalCrossentropy(),
+  metrics=['accuracy'],
+)
+
+oll_model.fit(x=X, y=y, epochs=150, batch_size=16)
+
+oll_model.save("oll_model.keras")
+
+# Returns total loss and accuracy (0.0 to 1.0)
+loss, accuracy = oll_model.evaluate(X, y, verbose=0)
+print(f"Overall Model Accuracy: {accuracy * 100:.2f}%")
+print(f"Overall Model Loss: {loss * 100:.2f}%")
+
+
+# checking
+
+
+# Grab the first 105-bit array and its actual label
+sample_input = X[151:152]  # Slice keeps the 2D tensor shape (1, 105)
+actual_label = y[151]
+
+# Run prediction
+probabilities = oll_model.predict(sample_input, verbose=0)
+predicted_class = np.argmax(probabilities)
+confidence = np.max(probabilities) * 100
+
+print(f"Actual Label:    {actual_label}")
+print(f"Predicted Class: {predicted_class}")
+print(f"Confidence:      {confidence:.2f}%")
+
+
+PLL FINAL RES:
+
+# what is the configuration of the adjacent colors to the top layer
+
+import tensorflow as tf
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import numpy as np
+
+# need to load pll csv file using pandas
+pll_df = pd.read_csv("./data/pll_training_data.csv")
+
+X = pll_df.drop(columns="label").values
+y = pll_df["label"].values
+
+
+
+pll_model = tf.keras.Sequential([
+  tf.keras.layers.Input(shape=(105,)),
+
+  tf.keras.layers.Dense(units=128, activation="relu"),
+  tf.keras.layers.Dense(units=64, activation="relu"),
+  tf.keras.layers.Dense(units=22, activation="softmax"),
+])
+
+pll_model.compile(
+  optimizer="adam",
+  loss = tf.keras.losses.SparseCategoricalCrossentropy(),
+  metrics=['accuracy'],
+)
+
+pll_model.fit(x=X, y=y, epochs=150, batch_size=16)
+
+# Returns total loss and accuracy (0.0 to 1.0)
+loss, accuracy = pll_model.evaluate(X, y, verbose=0)
+print(f"Overall Model Accuracy: {accuracy * 100:.2f}%")
+print(f"Overall Model Loss: {loss * 100:.2f}%")
+
+
+# Grab the first 105-bit array and its actual label
+sample_input = X[95:96]  # Slice keeps the 2D tensor shape (1, 105)
+actual_label = y[95]
+
+# Run prediction
+probabilities = pll_model.predict(sample_input, verbose=0)
+predicted_class = np.argmax(probabilities)
+confidence = np.max(probabilities) * 100
+
+print(f"Actual Label:    {actual_label}")
+print(f"Predicted Class: {predicted_class}")
+print(f"Confidence:      {confidence:.2f}%")

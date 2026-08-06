@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { moveToCubiePosition } from "./rotating_animations";
-import { COLORS } from "./rubik's_cube_state";
+import { moveToCubiePosition } from "./rotating_animations.js";
+import { COLORS } from "./rubik's_cube_state.js";
 
 
 
@@ -64,7 +64,7 @@ const FACE_TO_AXIS = {
 }
 
 // Dynamic translation system
-function translateLayer(pressedKey, camera) {
+export function translateLayer(pressedKey, camera) {
     const isUpperCase = pressedKey === pressedKey.toUpperCase();
     const key = pressedKey.toLowerCase();
 

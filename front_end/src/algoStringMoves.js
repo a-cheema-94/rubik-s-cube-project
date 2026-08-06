@@ -1,7 +1,7 @@
 // 1. Map standard CFOP notation to your internal MOVE_MAP keys
 
-import { animateMove } from "./controls";
-import { moveToCubiePosition } from "./rotating_animations";
+import { animateMove } from "./controls.js";
+import { moveToCubiePosition } from "./rotating_animations.js";
 
 const CFOP_TO_MAP = {
     'U': 'u', "U'": 'U', 'Uw': 'uw', "Uw'": 'Uw', 'u': 'uw', "u'": 'Uw',
@@ -19,7 +19,6 @@ const CFOP_TO_MAP = {
 export async function playAlgorithm(algoString, cubeState, syncFunc, cubies, scene, appState) {
     if (!algoString || appState.isRotating) return;
     
-    // Parse the string just like you did in applyMoves
     let rawMoves = algoString.trim().split(/\s+/);
     let playbackQueue = [];
 
@@ -45,7 +44,7 @@ export async function playAlgorithm(algoString, cubeState, syncFunc, cubies, sce
 
         appState.isRotating = true; // Lock the system
 
-        // We wrap your animateMove in a Promise so the for-loop waits for the animation to finish
+        // Wrap animateMove in a Promise so the for-loop waits for the animation to finish
         await new Promise((resolve) => {
             animateMove(moveConfig, cubeState, syncFunc, cubies, scene, () => {
                 appState.isRotating = false;
@@ -53,7 +52,7 @@ export async function playAlgorithm(algoString, cubeState, syncFunc, cubies, sce
             });
         });
         
-        // Optional: Add a tiny delay between moves so it looks natural, not robotic
-        await new Promise(r => setTimeout(r, 50)); 
+        // Tiny delay between moves so it looks natural, not robotic
+        // await new Promise(r => setTimeout(r, 100)); 
     }
 }
