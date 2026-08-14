@@ -4,12 +4,37 @@ import {
   oneHotEncode,
 } from "../ml_section/generateSampleData.js";
 import { colorToFacesNormalizer } from "../ml_section/colorNormalizer.js";
+import { validateCubeStateCheck } from "./validation_checks.js";
+
+function stickerCount (arr) {
+  let count = {}
+  arr.forEach(face => {
+    if (!count[face]){
+      count[face] = 1
+    } else {
+      count[face] += 1
+    }
+  })
+
+  for (const [_, num] of Object.entries(count)) {
+    if(num !== 9) return false;
+  }
+
+  return true
+}
 
 export function validateCubeForModel(cube) {
   const orientedF2LSolvedCube = verifyF2lAndOrientCube(cube);
 
   if (!orientedF2LSolvedCube) {
     console.warn("Cannot give OLL prediction, first two layers unsolved");
+    return { encodedData: null, state: "none", currCube: null };
+  }
+
+  const validationCheck = validateCubeStateCheck(cube.getCube())
+  // check if each cube has nine stickers per face
+  if (!validationCheck.isValid) {
+    console.warn(`Cube in wrong state: ${validationCheck.reason}`);
     return { encodedData: null, state: "none", currCube: null };
   }
 
@@ -74,7 +99,7 @@ export function verifyF2lAndOrientCube(cube) {
 }
 
 // need to verify that first two layers are properly solved before ready for model predictions
-function verifyF2LSolved(orientedCube) {
+export function verifyF2LSolved(orientedCube) {
   // first indexes for each adjacent face: F, L, R, B
   const adjacentFaceIdxs = [9, 27, 36, 45];
   for (const faceIdx of adjacentFaceIdxs) {
@@ -86,6 +111,12 @@ function verifyF2LSolved(orientedCube) {
         return false;
       }
     }
+  }
+
+  // check bottom layer colors all match
+  const bottomCenterColor = orientedCube[22];
+  for (let i=18; i<27; i++) {
+    if(orientedCube[i] !== bottomCenterColor) return false;
   }
 
   console.log("Satisfies F2L!!!");

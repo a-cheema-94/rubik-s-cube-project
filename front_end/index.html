@@ -11,6 +11,7 @@
       defer
     ></script>
     <script src="src/index.js" type="module"></script>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <canvas
@@ -18,6 +19,18 @@
       width="640"
       style="border: 3px solid rgb(199, 10, 10)"
     ></canvas>
+
+    <div class="mode-selector">
+      <span class="mode-label">Mode:</span>
+      <div class="segmented-buttons">
+        <button id="easy-mode-btn" class="segment-btn " data-mode="easy">
+          Easy
+        </button>
+        <button id="hard-mode-btn" class="segment-btn active" data-mode="hard">
+          Hard
+        </button>
+      </div>
+    </div>
 
     <button
       height="50"
@@ -47,5 +60,119 @@
       id="btn-solve-cube"
     >Solve cube</button>
     <input id="algo-string-input" type="text" placeholder="Input you algo string here..."/>
+
+    <button id="controls-toggle-btn" class="hud-btn" title="Toggle Controls Help">
+      Controls <span class="shortcut-hint">(Press ?)</span>
+    </button>
+
+
+<!-- todo => toggle solution card when not needed -->
+
+    <div id="solution-card" class="solution-card hidden">
+      <div class="card-header">
+        <span id="case-name" class="case-name"></span>
+      </div>
+
+      <div class="algorithm-container">
+        
+        <span id="pre-moves" class="move-prefix"></span>
+        
+        
+        <span id="core-algo" class="move-core"></span>
+      </div>
+
+      <div class="card-actions">
+        <button id="play-algo-btn" class="primary-btn">▶ Play Algorithm</button>
+      </div>
+    </div>
+
+
+
+    <div id="controls-panel" class="controls-panel hidden">
+      <div class="panel-header">
+        <h3>Keyboard Controls</h3>
+        <button id="close-controls-btn" class="close-btn">&times;</button>
+      </div>
+
+      <div class="controls-grid">
+        <div class="control-group">
+          <h4>Face Turns</h4>
+          <div class="key-row">
+            <span>Right Face</span>
+            <div class="key-combo"><kbd>r</kbd> / <kbd>R</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>Left Face</span>
+            <div class="key-combo"><kbd>l</kbd> / <kbd>L</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>Up Face</span>
+            <div class="key-combo"><kbd>u</kbd> / <kbd>U</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>Down Face</span>
+            <div class="key-combo"><kbd>d</kbd> / <kbd>D</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>Front Face</span>
+            <div class="key-combo"><kbd>f</kbd> / <kbd>F</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>Back Face</span>
+            <div class="key-combo"><kbd>b</kbd> / <kbd>B</kbd></div>
+          </div>
+        </div>
+
+        
+        <div class="control-group">
+          <h4>Modifiers & Slices</h4>
+          <div class="key-row">
+            <span>Double Layer</span>
+            <div class="key-combo"><kbd>w</kbd> + <span >Move</span></div>
+          </div>
+          <div class="key-row">
+            <span>M Slice</span>
+            <div class="key-combo"><kbd>m</kbd> / <kbd>M</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>E Slice</span>
+            <div class="key-combo"><kbd>e</kbd> / <kbd>E</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>S Slice</span>
+            <div class="key-combo"><kbd>s</kbd> / <kbd>S</kbd></div>
+          </div>
+        </div>
+
+        
+        <div class="control-group">
+          <h4>Cube Rotations</h4>
+          <div class="key-row">
+            <span>X Axis</span>
+            <div class="key-combo"><kbd>x</kbd> / <kbd>X</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>Y Axis</span>
+            <div class="key-combo"><kbd>y</kbd> / <kbd>Y</kbd></div>
+          </div>
+          <div class="key-row">
+            <span>Z Axis</span>
+            <div class="key-combo"><kbd>z</kbd> / <kbd>Z</kbd></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <small></small><strong>Tip:</strong> Lowercase = Clockwise | Uppercase (<kbd>Shift</kbd>) = AntiClockwise</small>
+      </div>
+    </div>
+
+
+<!-- TESTING -->
+  <!-- <button id="btn-testing-adverse">Test Adversarial inputs</button>
+  
+
+  <button id="btn-testing-nn">Test neural networks speed</button>
+  <button id="btn-testing-solver">Test solver speed</button> -->
   </body>
 </html>

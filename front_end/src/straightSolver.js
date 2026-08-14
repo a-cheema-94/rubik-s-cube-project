@@ -61,7 +61,7 @@ export async function solveCubeStraight(cube, syncVisualCubeToState, cubies, sce
 // pull out each face -> find center index -> use created map to map color to string values: U, R, F, D, L, B
 // place in object with face as key and 9 element array as value.
 // convert object into a 54 element string.
-function convertStateToCubeJS(cubeArr) {
+export function convertStateToCubeJS(cubeArr) {
   const facesOrder = ["U", "R", "F", "D", "L", "B"]
 
   const upFace = cubeArr.slice(0, 9)

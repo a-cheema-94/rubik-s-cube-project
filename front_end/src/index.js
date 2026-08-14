@@ -18,6 +18,9 @@ import { scrambleCube } from "./scramble";
 import { loadModels, handlePredictions } from "./testing_models";
 import { playAlgorithm } from "./algoStringMoves";
 import { solveCubeStraight } from "./straightSolver";
+import { setMode, toggleControls } from "./helperFunctions";
+import { runAdversarialEvaluationSuite } from "./testing/adversarialTest";
+import { benchmarkKociemba, benchmarkNeuralNetworks, generateSampleData } from "./testing/latencyOfModelsAndSolver";
 
 
 // variable to lock screen when sequence of moves (scramble) in progress
@@ -69,7 +72,6 @@ const cubies = [];
 
 function generateCubies() {
   let count = 0;
-
   // generate 3 x 3 x 3 cubies
   for (let x = -1; x <= 1; x++) {
     for (let y = -1; y <= 1; y++) {
@@ -114,10 +116,6 @@ function generateCubies() {
         cubie.castShadow = true;
         cubie.receiveShadow = true;
 
-        // console.log(`${cubie.position.x},${cubie.position.y},${cubie.position.z}: ${COORDINATES_TO_STATE_INDEXES[`${cubie.position.x},${cubie.position.y},${cubie.position.z}`]}`)
-
-        // cubie.material[0].color.set("#f210c1")
-
         scene.add(cubie);
 
         cubies.push(cubie);
@@ -159,8 +157,19 @@ scene.add(directionalLight);
 let myStateCube = new RubiksCube();
 console.log("STARTING STATE: ", myStateCube.getCube());
 
+
+// 40 and 49
+let testStateCube =  [
+      2, 4, 0, 4, 4, 4, 3, 4, 0, 1, 3, 4,
+      2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 4, 2, 4, 0, 0, 0, 0, 0, 0,
+      3, 1, 2, 1, 1, 1, 1, 1, 1, 4, 0, 1,
+      3, 3, 3, 3, 3, 3
+    ]
+
 function syncVisualCubeToState() {
-  // console.log("rannnn");
+  console.log("rannnn");
+  // myStateCube.setCube(testStateCube)
   const currCube = myStateCube.getCube();
 
   cubies.forEach((cubie) => {
@@ -202,6 +211,8 @@ scrambleBtn.addEventListener("click", () => {
 
 })
 
+let predictedAlgoString = null;
+
 // Models 
 
 const { ollModel, pllModel } = await loadModels();
@@ -213,12 +224,14 @@ const pllBtn = document.getElementById("btn-predict-pll")
 ollBtn.addEventListener("click", async () => {
   const res = await handlePredictions(myStateCube, ollModel, pllModel, "oll", camera)
   console.log(res)
+  predictedAlgoString = res
 })
 
 
 pllBtn.addEventListener("click", async () => {
   const res = await handlePredictions(myStateCube, ollModel, pllModel, "pll", camera)
   console.log(res)
+  predictedAlgoString = res
 })
 
 
@@ -244,3 +257,96 @@ solveCubeBtn.addEventListener("click", async () => {
   console.log("here.....solved....")
   await solveCubeStraight(myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
 })
+
+// play Algorithm button when algo displayed on screen and controls toggle button
+const playAlgoButton = document.getElementById("play-algo-btn");
+
+playAlgoButton.addEventListener("click", () => {
+  console.log("pressed play algo button")
+  if(predictedAlgoString) {
+    playAlgorithm(predictedAlgoString, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
+
+  }
+}
+)
+
+toggleControls();
+
+
+let isHardMode = false;
+
+setMode(controls, isHardMode)
+
+
+
+// TESTING
+
+// const testAdverseBtn = document.getElementById("btn-testing-adverse");
+
+// testAdverseBtn.addEventListener("click", async () => {
+//   console.log("clicked Adversarial Test button")
+//   const { ollModel, pllModel } = await loadModels();
+
+//   runAdversarialEvaluationSuite(ollModel, pllModel)
+// })
+
+// const testNNBtn = document.getElementById("btn-testing-nn")
+// const testSolverBtn = document.getElementById("btn-testing-solver")
+
+// const NUM_TRIALS = 50;
+
+// testNNBtn.addEventListener("click", async () => {
+//   console.log("clicked NN test button")
+//   const { ollModel, pllModel } = await loadModels()
+
+//   let totalOllLat = 0, totalPllLat = 0;
+  
+//   for (let i=0; i<NUM_TRIALS; i++) {
+//     const nnRes = await benchmarkNeuralNetworks(ollModel, pllModel)
+//     totalOllLat += nnRes.ollAvgMs
+//     totalPllLat += nnRes.pllAvgMs 
+//   }
+
+//   const finalRes = {
+//     trials: NUM_TRIALS,
+//     nnOllAvgMs: parseFloat((totalOllLat / NUM_TRIALS).toFixed(2)),
+//     nnPllAvgMs: parseFloat((totalPllLat / NUM_TRIALS).toFixed(2)),
+//   }
+
+//   console.log("HERE ARE THE RESULTS FOR NN TRIALS", finalRes)
+// })
+
+// // {ollAvgMs: 0.98, pllAvgMs: 0.73}
+
+// // FINAL RESULT: {trials: 50, nnOllAvgMs: 0.21, nnPllAvgMs: 0.22}
+
+// testSolverBtn.addEventListener("click", async () => {
+//   console.log("clicked solver test button")
+
+//   let totalKociembaRandomLat = 0, totalKociembaSuperFlipLat = 0
+  
+//   for (let i=0; i<NUM_TRIALS; i++) {
+//     const solverRes = await benchmarkKociemba()
+    
+//     const superFlipRes = solverRes.find(res => res.type.includes("Superflip"));
+//     const randomRes = solverRes.find(res => res.type.includes("Random"));
+
+//     if(superFlipRes) totalKociembaSuperFlipLat += superFlipRes.latencyMs
+//     if(randomRes) totalKociembaRandomLat += randomRes.latencyMs
+//   }
+
+//   const finalRes = {
+//     trials: NUM_TRIALS,
+//     kociembaRandomAvgMs: parseFloat((totalKociembaRandomLat / NUM_TRIALS).toFixed(2)),
+//     kociembaSuperflipAvgMs: parseFloat((totalKociembaSuperFlipLat / NUM_TRIALS).toFixed(2))
+//   }
+
+
+//   console.log("HERE ARE THE RESULTS FOR SOLVER TRIALS: ", finalRes)
+// })
+
+
+// [ {type: 'Superflip (Worst Case)', latencyMs: 552.5}, {type: 'Random Scramble', latencyMs: 3.7}, {type: 'Random Scramble', latencyMs: 12.9} ]
+
+
+// FINAL RESULTS: {trials: 50, kociembaRandomAvgMs: 4.29, kociembaSuperflipAvgMs: 498.13}

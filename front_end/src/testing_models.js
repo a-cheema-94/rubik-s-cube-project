@@ -3,8 +3,9 @@ import {
   calculatePreRotations,
   validateCubeForModel,
 } from "./validate_cube_state.js";
-import { LAST_LAYER_ALGO_STORE } from "../ml_section/oll_pll_algos";
+import { LAST_LAYER_ALGO_STORE } from "../ml_section/oll_pll_algos.js";
 import { getFaceFacingCamera } from "./getFacingCameraHelper.js";
+import { displayPredictions } from "./helperFunctions.js";
 
 export async function loadModels() {
   console.log("Attempting to load ML models...");
@@ -62,6 +63,7 @@ export async function handlePredictions(
     console.warn(
       `User requested ${userModelRequest}, but cube state is ${actualCubeState}`,
     );
+    alert(`Cannot run ${userModelRequest.toUpperCase()} prediction. Current detected state: ${actualCubeState.toUpperCase()}.`)
     return;
   }
 
@@ -89,6 +91,7 @@ export async function handlePredictions(
   );
 
   // ? Here is where to input logic about correct face for algo -> attach pre y or U rotations to algo. Call the function here.
+  // todo => sometimes pre rotations get it wrong
   const possiblePreRotation = calculatePreRotations(
     currCube,
     predictedAlgo["normalizedPattern"],
@@ -107,15 +110,32 @@ export async function handlePredictions(
     L: "y",
   };
 
-  
   const cameraFacingFace = getFaceFacingCamera(camera);
   const cameraOffset = cameraYOffsetMap[cameraFacingFace];
 
+  const predictedResult = {};
+
+  predictedResult["name"] =
+    `${userModelRequest.toUpperCase()}: ${predictedAlgo.name}`;
+  predictedResult["algo"] = predictedAlgo.algo;
+  let fullPreMoves = "";
+
   // Combine camera orientation + setup orientation + model pre-y rotation
   let finalAlgo = predictedAlgo["algo"];
-  if (possiblePreRotation) finalAlgo = `${possiblePreRotation} ${finalAlgo}`;
-  if (cameraOffset) finalAlgo = `${cameraOffset} ${finalAlgo}`;
-  // if (physicalSetupMove) finalAlgo = `${physicalSetupMove} ${finalAlgo}`;
+
+  if (possiblePreRotation) {
+    finalAlgo = `${possiblePreRotation} ${finalAlgo}`;
+    fullPreMoves = possiblePreRotation + fullPreMoves;
+    predictedResult["pre"] = fullPreMoves;
+  }
+  if (cameraOffset) {
+    finalAlgo = `${possiblePreRotation} ${finalAlgo}`;
+    fullPreMoves = cameraOffset + " " + fullPreMoves;
+    predictedResult["pre"] = fullPreMoves;
+  }
+
+  console.log("PREDICTED RESULT: ", predictedResult);
+  displayPredictions(predictedResult);
 
   return finalAlgo;
 
