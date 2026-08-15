@@ -44,6 +44,9 @@ export function displayPredictions(predictedResult) {
   solutionCard.classList.remove("hidden")
 }
 
+
+
+
 export function toggleControls() {
   // open and close buttons
   const toggleBtn = document.getElementById('controls-toggle-btn');
@@ -92,7 +95,7 @@ export function setMode(controls, isHardMode) {
     easyBtn.classList.toggle('active', !isHardMode);
     hardBtn.classList.toggle('active', isHardMode);
 
-    updatePlayAlgoBtn();
+    // updatePlayAlgoBtn();
   }
 
   easyBtn.addEventListener("click", () => setHardMode(false))

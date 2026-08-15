@@ -105,13 +105,16 @@ export async function handlePredictions(
   // Map how many Y rotations are needed to turn the camera's front face into logical Front
   const cameraYOffsetMap = {
     F: "",
-    R: "y'",
+    R: "y",
     B: "y2",
-    L: "y",
+    L: "y'",
   };
-
+// todo -> maybe remove camera orientation logic as it is not needed in the face of not having controls.
   const cameraFacingFace = getFaceFacingCamera(camera);
   const cameraOffset = cameraYOffsetMap[cameraFacingFace];
+
+  console.log("IS THERE A CAMERA OFFSET: ", cameraOffset);
+
 
   const predictedResult = {};
 

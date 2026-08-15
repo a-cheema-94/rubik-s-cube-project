@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { TrackballControls } from "three/addons/controls/TrackballControls.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 
 import {
   RED,
@@ -35,16 +36,15 @@ const scene = new THREE.Scene();
 
 // Create the PerspectiveCamera
 // Arguments: Field of View (degrees), Aspect Ratio, Near clipping plane, Far clipping plane
-const fov = 75;
+const fov = 60;
 const aspect = canvas.clientWidth / canvas.clientHeight;
 const near = 0.1;
 const far = 1000;
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 // Move the camera back a bit so we aren't inside the center of the scene (0,0,0)
-camera.position.z = 4;
-camera.position.y = 2;
-camera.position.x = -2
+camera.position.set(-2.5, 2.5, 4.5);
+camera.lookAt(0, 0, 0)
 
 // Create the WebGLRenderer and link it to your canvas
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
@@ -58,12 +58,18 @@ renderer.setClearColor("#161616", 1);
 // ... (camera and renderer setup) ...
 
 // Initialize TrackballControls
-const controls = new TrackballControls(camera, renderer.domElement);
+// const controls = new TrackballControls(camera, renderer.domElement);
+// const controls = new OrbitControls(camera, renderer.domElement);
 
 // Smooth the movement (damping)
-controls.rotateSpeed = 2.0;
-controls.panSpeed = 2;
-controls.dynamicDampingFactor = 0.3;
+// controls.rotateSpeed = 2.0;
+// controls.panSpeed = 2;
+// controls.dynamicDampingFactor = 0.3;
+
+// // vertical limits
+// controls.minPolarAngle = Math.PI * 0.1;
+// controls.maxPolarAngle = Math.PI * 0.9;
+// controls.enableDamping = true;
 
 // all cubies stored here.
 const cubies = [];
@@ -132,7 +138,7 @@ function animate() {
   requestAnimationFrame(animate);
 
 
-  controls.update();
+  // controls.update();
   
 
   // This is the magic line that actually draws the scene from the camera's perspective
@@ -258,14 +264,29 @@ solveCubeBtn.addEventListener("click", async () => {
   await solveCubeStraight(myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
 })
 
+
+// hide solution card:
+
+const solutionCard = document.getElementById('solution-card');
+const closeBtn = document.getElementById('close-solution-btn');
+
+export function hideSolutionCard() {
+  console.log("CLOSED SOLUTION CARD ATTEMPT")
+  solutionCard.classList.add('hidden');
+}
+
+closeBtn.addEventListener('click', hideSolutionCard);
+
 // play Algorithm button when algo displayed on screen and controls toggle button
 const playAlgoButton = document.getElementById("play-algo-btn");
 
-playAlgoButton.addEventListener("click", () => {
+playAlgoButton.addEventListener("click", async () => {
   console.log("pressed play algo button")
   if(predictedAlgoString) {
-    playAlgorithm(predictedAlgoString, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
-
+    console.log("CALLING PLAY ALGO WITH: ", predictedAlgoString)
+    
+    await playAlgorithm(predictedAlgoString, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
+    hideSolutionCard()
   }
 }
 )
@@ -273,9 +294,13 @@ playAlgoButton.addEventListener("click", () => {
 toggleControls();
 
 
-let isHardMode = false;
 
-setMode(controls, isHardMode)
+
+
+
+// let isHardMode = true;
+
+// setMode(controls, isHardMode)
 
 
 
