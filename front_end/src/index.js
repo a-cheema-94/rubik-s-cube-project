@@ -22,6 +22,7 @@ import { solveCubeStraight } from "./straightSolver";
 import { setMode, toggleControls } from "./helperFunctions";
 import { runAdversarialEvaluationSuite } from "./testing/adversarialTest";
 import { benchmarkKociemba, benchmarkNeuralNetworks, generateSampleData } from "./testing/latencyOfModelsAndSolver";
+import { generateRandomF2LStates } from "./generateRandomF2LStates";
 
 
 // variable to lock screen when sequence of moves (scramble) in progress
@@ -306,69 +307,81 @@ toggleControls();
 
 // TESTING
 
-// const testAdverseBtn = document.getElementById("btn-testing-adverse");
 
-// testAdverseBtn.addEventListener("click", async () => {
-//   console.log("clicked Adversarial Test button")
-//   const { ollModel, pllModel } = await loadModels();
+// generate random F2L states for testing
+const generateF2LStateBtn = document.getElementById("btn-testing-generate-ll-state");
 
-//   runAdversarialEvaluationSuite(ollModel, pllModel)
-// })
+generateF2LStateBtn.addEventListener("click", async () => {
+  // will generate a random OLL state
+  console.log("clicked GENERATE F2L BUTTON!!!")
 
-// const testNNBtn = document.getElementById("btn-testing-nn")
-// const testSolverBtn = document.getElementById("btn-testing-solver")
+  await generateRandomF2LStates(myStateCube, syncVisualCubeToState, cubies, scene, currAppState);
 
-// const NUM_TRIALS = 50;
+})
 
-// testNNBtn.addEventListener("click", async () => {
-//   console.log("clicked NN test button")
-//   const { ollModel, pllModel } = await loadModels()
+const testAdverseBtn = document.getElementById("btn-testing-adverse");
 
-//   let totalOllLat = 0, totalPllLat = 0;
+testAdverseBtn.addEventListener("click", async () => {
+  console.log("clicked Adversarial Test button")
+  const { ollModel, pllModel } = await loadModels();
+
+  runAdversarialEvaluationSuite(ollModel, pllModel)
+})
+
+const testNNBtn = document.getElementById("btn-testing-nn")
+const testSolverBtn = document.getElementById("btn-testing-solver")
+
+const NUM_TRIALS = 50;
+
+testNNBtn.addEventListener("click", async () => {
+  console.log("clicked NN test button")
+  const { ollModel, pllModel } = await loadModels()
+
+  let totalOllLat = 0, totalPllLat = 0;
   
-//   for (let i=0; i<NUM_TRIALS; i++) {
-//     const nnRes = await benchmarkNeuralNetworks(ollModel, pllModel)
-//     totalOllLat += nnRes.ollAvgMs
-//     totalPllLat += nnRes.pllAvgMs 
-//   }
+  for (let i=0; i<NUM_TRIALS; i++) {
+    const nnRes = await benchmarkNeuralNetworks(ollModel, pllModel)
+    totalOllLat += nnRes.ollAvgMs
+    totalPllLat += nnRes.pllAvgMs 
+  }
 
-//   const finalRes = {
-//     trials: NUM_TRIALS,
-//     nnOllAvgMs: parseFloat((totalOllLat / NUM_TRIALS).toFixed(2)),
-//     nnPllAvgMs: parseFloat((totalPllLat / NUM_TRIALS).toFixed(2)),
-//   }
+  const finalRes = {
+    trials: NUM_TRIALS,
+    nnOllAvgMs: parseFloat((totalOllLat / NUM_TRIALS).toFixed(2)),
+    nnPllAvgMs: parseFloat((totalPllLat / NUM_TRIALS).toFixed(2)),
+  }
 
-//   console.log("HERE ARE THE RESULTS FOR NN TRIALS", finalRes)
-// })
+  console.log("HERE ARE THE RESULTS FOR NN TRIALS", finalRes)
+})
 
-// // {ollAvgMs: 0.98, pllAvgMs: 0.73}
+// {ollAvgMs: 0.98, pllAvgMs: 0.73}
 
-// // FINAL RESULT: {trials: 50, nnOllAvgMs: 0.21, nnPllAvgMs: 0.22}
+// FINAL RESULT: {trials: 50, nnOllAvgMs: 0.21, nnPllAvgMs: 0.22}
 
-// testSolverBtn.addEventListener("click", async () => {
-//   console.log("clicked solver test button")
+testSolverBtn.addEventListener("click", async () => {
+  console.log("clicked solver test button")
 
-//   let totalKociembaRandomLat = 0, totalKociembaSuperFlipLat = 0
+  let totalKociembaRandomLat = 0, totalKociembaSuperFlipLat = 0
   
-//   for (let i=0; i<NUM_TRIALS; i++) {
-//     const solverRes = await benchmarkKociemba()
+  for (let i=0; i<NUM_TRIALS; i++) {
+    const solverRes = await benchmarkKociemba()
     
-//     const superFlipRes = solverRes.find(res => res.type.includes("Superflip"));
-//     const randomRes = solverRes.find(res => res.type.includes("Random"));
+    const superFlipRes = solverRes.find(res => res.type.includes("Superflip"));
+    const randomRes = solverRes.find(res => res.type.includes("Random"));
 
-//     if(superFlipRes) totalKociembaSuperFlipLat += superFlipRes.latencyMs
-//     if(randomRes) totalKociembaRandomLat += randomRes.latencyMs
-//   }
+    if(superFlipRes) totalKociembaSuperFlipLat += superFlipRes.latencyMs
+    if(randomRes) totalKociembaRandomLat += randomRes.latencyMs
+  }
 
-//   const finalRes = {
-//     trials: NUM_TRIALS,
-//     kociembaRandomAvgMs: parseFloat((totalKociembaRandomLat / NUM_TRIALS).toFixed(2)),
-//     kociembaSuperflipAvgMs: parseFloat((totalKociembaSuperFlipLat / NUM_TRIALS).toFixed(2))
-//   }
+  const finalRes = {
+    trials: NUM_TRIALS,
+    kociembaRandomAvgMs: parseFloat((totalKociembaRandomLat / NUM_TRIALS).toFixed(2)),
+    kociembaSuperflipAvgMs: parseFloat((totalKociembaSuperFlipLat / NUM_TRIALS).toFixed(2))
+  }
 
 
-//   console.log("HERE ARE THE RESULTS FOR SOLVER TRIALS: ", finalRes)
-// })
+  console.log("HERE ARE THE RESULTS FOR SOLVER TRIALS: ", finalRes)
+})
 
 
 // [ {type: 'Superflip (Worst Case)', latencyMs: 552.5}, {type: 'Random Scramble', latencyMs: 3.7}, {type: 'Random Scramble', latencyMs: 12.9} ]

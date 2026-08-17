@@ -8,18 +8,123 @@ body {
 
 
 .outer-flex-container {
+  /* margin-top: 120px; */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
+}
+
+.buttons-flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 button {
+
   
+  background-color: rgba(30, 30, 46, 0.92);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: rgba(30, 30, 46, 0.92);
+  font-weight: 400;
+  backdrop-filter: blur(10px); /* Soft background blur */
+  border: 1px solid #313244;
+  border-radius: 12px;
+  padding: 18px;
+  color: #cdd6f4;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.buttons-flex-container {}
+button:hover {
+  background-color: #4261a4;
+}
 
+button:active {
+  transform: translateY(1px);
+}
+
+
+/* solution card */
+
+.solution-card {
+  width: 400px;
+  max-width: 90vw;
+  position: fixed;
+  /* padding: 15px; */
+  top: 70px;
+  left: 20px;
+  width: 360px;
+  background: rgba(30, 30, 46, 0.92);
+  backdrop-filter: blur(10px); /* Soft background blur */
+  border: 1px solid #313244;
+  border-radius: 12px;
+  padding: 18px;
+  color: #cdd6f4;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.case-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e77533;
+  margin-left: 10px;
+}
+
+.close-card-btn {
+  margin-left: auto;
+  padding: 2px 8px;
+
+  border: none;
+  background: transparent;
+  color: #aaa;
+
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.close-card-btn:hover {
+  color: white;
+}
+
+.algorithm-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  padding: 12px;
+  margin-bottom: 15px;
+
+  background-color: #1a2232;
+  border-radius: 6px;
+}
+
+
+.move-core {
+  color: white;
+  font-weight: 600;
+}
+
+.card-actions {
+  display: flex;
+}
+
+.primary-btn {
+  width: 100%;
+}
 /* Panel Base */
 .controls-panel {
   position: fixed;

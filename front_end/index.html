@@ -36,38 +36,53 @@
       </div> -->
       <div class="buttons-flex-container">
 
-        <button
-          height="50"
-          width="100"
-          style="border: 1px solid black;"
-          id="btn-scramble"
-        >Scramble</button>
+
+        <div class="">
+
+          <button
+            height="50"
+            width="100"
+            
+            id="btn-scramble"
+          >Scramble</button>
+      
+          <button
+            height="50"
+            width="100"
+            
+            id="btn-predict-oll"
+          >OLL Predict</button>
+      
+          <button
+            height="50"
+            width="100"
+            
+            id="btn-predict-pll"
+          >PLL Predict</button>
+      
+          <button
+            height="50"
+            width="100"
+            
+            id="btn-solve-cube"
+          >Solve cube</button>
+          <!-- <input id="algo-string-input" type="text" placeholder="Input you algo string here..."/> -->
+      
+          <button id="controls-toggle-btn" class="hud-btn" title="Toggle Controls Help">
+            Controls <span class="shortcut-hint">(Press ?)</span>
+          </button>
+        </div>
+
+        <div class="">
+
+          <!-- TESTING -->
+    <button id="btn-testing-generate-ll-state">Generate F2L state</button>
+    <button id="btn-testing-adverse">Test Adversarial inputs</button>
     
-        <button
-          height="50"
-          width="100"
-          style="border: 1px solid black;"
-          id="btn-predict-oll"
-        >OLL Predict</button>
-    
-        <button
-          height="50"
-          width="100"
-          style="border: 1px solid black;"
-          id="btn-predict-pll"
-        >PLL Predict</button>
-    
-        <button
-          height="50"
-          width="100"
-          style="border: 1px solid black;"
-          id="btn-solve-cube"
-        >Solve cube</button>
-        <!-- <input id="algo-string-input" type="text" placeholder="Input you algo string here..."/> -->
-    
-        <button id="controls-toggle-btn" class="hud-btn" title="Toggle Controls Help">
-          Controls <span class="shortcut-hint">(Press ?)</span>
-        </button>
+  
+    <button id="btn-testing-nn">Test neural networks speed</button>
+    <button id="btn-testing-solver">Test solver speed</button>
+        </div>
       </div>
     </div>
 
@@ -176,11 +191,6 @@
     </div>
 
 
-<!-- TESTING -->
-  <button id="btn-testing-adverse">Test Adversarial inputs</button>
-  
 
-  <button id="btn-testing-nn">Test neural networks speed</button>
-  <button id="btn-testing-solver">Test solver speed</button>
   </body>
 </html>
