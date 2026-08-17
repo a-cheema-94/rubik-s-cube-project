@@ -2,6 +2,24 @@
   display: none;
 }
 
+body {
+  background-color: #11111b;
+}
+
+
+.outer-flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+button {
+  
+}
+
+.buttons-flex-container {}
+
 /* Panel Base */
 .controls-panel {
   position: fixed;
@@ -166,3 +184,4 @@ kbd {
 .close-card-btn:hover {
   color: #f38ba8; /* Subtle red highlight on hover */
 }
+

@@ -243,15 +243,15 @@ pllBtn.addEventListener("click", async () => {
 
 // using algo strings to initiate moves.
 
-const algoStringInput = document.getElementById("algo-string-input");
+// const algoStringInput = document.getElementById("algo-string-input");
 
-algoStringInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    // call function
-    console.log("PRESSED ENTER IN INPUT FIELD: ", algoStringInput.value);
-    playAlgorithm(algoStringInput.value, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
-  }
-})
+// algoStringInput.addEventListener("keydown", (e) => {
+//   if (e.key === "Enter") {
+//     // call function
+//     console.log("PRESSED ENTER IN INPUT FIELD: ", algoStringInput.value);
+//     playAlgorithm(algoStringInput.value, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
+//   }
+// })
 
 
 // solve cube button

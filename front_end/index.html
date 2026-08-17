@@ -14,56 +14,62 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <canvas
-      height="480"
-      width="640"
-      style="border: 3px solid rgb(199, 10, 10)"
-    ></canvas>
 
-    <!-- <div class="mode-selector">
-      <span class="mode-label">Mode:</span>
-      <div class="segmented-buttons">
-        <button id="easy-mode-btn" class="segment-btn " data-mode="easy">
-          Easy
-        </button>
-        <button id="hard-mode-btn" class="segment-btn active" data-mode="hard">
-          Hard
+    <div class="outer-flex-container">
+      
+      <canvas
+        height="480"
+        width="640"
+        style="border: 3px solid rgb(207, 203, 203); border-radius: 10px;"
+      ></canvas>
+  
+      <!-- <div class="mode-selector">
+        <span class="mode-label">Mode:</span>
+        <div class="segmented-buttons">
+          <button id="easy-mode-btn" class="segment-btn " data-mode="easy">
+            Easy
+          </button>
+          <button id="hard-mode-btn" class="segment-btn active" data-mode="hard">
+            Hard
+          </button>
+        </div>
+      </div> -->
+      <div class="buttons-flex-container">
+
+        <button
+          height="50"
+          width="100"
+          style="border: 1px solid black;"
+          id="btn-scramble"
+        >Scramble</button>
+    
+        <button
+          height="50"
+          width="100"
+          style="border: 1px solid black;"
+          id="btn-predict-oll"
+        >OLL Predict</button>
+    
+        <button
+          height="50"
+          width="100"
+          style="border: 1px solid black;"
+          id="btn-predict-pll"
+        >PLL Predict</button>
+    
+        <button
+          height="50"
+          width="100"
+          style="border: 1px solid black;"
+          id="btn-solve-cube"
+        >Solve cube</button>
+        <!-- <input id="algo-string-input" type="text" placeholder="Input you algo string here..."/> -->
+    
+        <button id="controls-toggle-btn" class="hud-btn" title="Toggle Controls Help">
+          Controls <span class="shortcut-hint">(Press ?)</span>
         </button>
       </div>
-    </div> -->
-
-    <button
-      height="50"
-      width="100"
-      style="border: 1px solid black;"
-      id="btn-scramble"
-    >Scramble</button>
-
-    <button
-      height="50"
-      width="100"
-      style="border: 1px solid black;"
-      id="btn-predict-oll"
-    >OLL Predict</button>
-
-    <button
-      height="50"
-      width="100"
-      style="border: 1px solid black;"
-      id="btn-predict-pll"
-    >PLL Predict</button>
-
-    <button
-      height="50"
-      width="100"
-      style="border: 1px solid black;"
-      id="btn-solve-cube"
-    >Solve cube</button>
-    <input id="algo-string-input" type="text" placeholder="Input you algo string here..."/>
-
-    <button id="controls-toggle-btn" class="hud-btn" title="Toggle Controls Help">
-      Controls <span class="shortcut-hint">(Press ?)</span>
-    </button>
+    </div>
 
 
 <!-- todo => toggle solution card when not needed -->
@@ -90,7 +96,7 @@
 
 
 
-    <div id="controls-panel" class="controls-panel hidden">
+    <div id="controls-panel" class="controls-panel">
       <div class="panel-header">
         <h3>Keyboard Controls</h3>
         <button id="close-controls-btn" class="close-btn">&times;</button>
@@ -171,10 +177,10 @@
 
 
 <!-- TESTING -->
-  <!-- <button id="btn-testing-adverse">Test Adversarial inputs</button>
+  <button id="btn-testing-adverse">Test Adversarial inputs</button>
   
 
   <button id="btn-testing-nn">Test neural networks speed</button>
-  <button id="btn-testing-solver">Test solver speed</button> -->
+  <button id="btn-testing-solver">Test solver speed</button>
   </body>
 </html>
