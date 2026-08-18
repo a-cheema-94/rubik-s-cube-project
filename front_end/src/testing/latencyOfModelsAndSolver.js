@@ -100,8 +100,6 @@ export async function benchmarkNeuralNetworks(ollModel, pllModel) {
 
 }
 
-// http://localhost:3000/api/solve
-// "http://localhost:3000/api/solve"
 
 export async function benchmarkKociemba() {
   const results = [];

@@ -55,7 +55,7 @@ const CFOP_TO_MAP = {
   "z'": "Z",
 };
 
-// todo -> play algo button doesn't account for camera orientation
+
 
 export async function playAlgorithm(
   algoString,
@@ -96,7 +96,6 @@ export async function playAlgorithm(
     await new Promise((resolve) => {
       animateMove(moveConfig, cubeState, syncFunc, cubies, scene, () => {
         appState.isRotating = false;
-        // updateUIButtons(cubeState.getCube());
         resolve(); // This allows the loop to continue to the next move
       });
     });

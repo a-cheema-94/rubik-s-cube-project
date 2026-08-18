@@ -11,14 +11,14 @@ console.log(typeof(csv))
 const rows = csv.trim().split("\n"); // trim whitespace and have an array which each element being a row of 105.
 
 const headerRow = rows.shift().split(",");
-// console.log("SHOULD BE 106: ", headerRow.length)
+
 const labelIdx = headerRow.indexOf("label")
-// console.log("LABEL INDEX: ", labelIdx) // 105
+
 
 const X_values = []
 const y_values = []
 
-// console.log("TESTING TO SEE IF HEADERS REMOVED", rows[0].split(",")[labelIdx]) // 0
+
 
 
 
@@ -32,11 +32,7 @@ rows.forEach(row => {
   X_values.push(values)
 })
 
-// 22 * 16 = 352
-// console.log(X_values.length)
-// console.log(y_values.length)
-// console.log(X_values)
-// console.log(y_values)
+
 
 // convert js arrays to tensors
 const X = tf.tensor2d(X_values, [X_values.length, 105], "float32")

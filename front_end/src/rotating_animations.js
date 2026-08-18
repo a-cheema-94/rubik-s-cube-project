@@ -65,23 +65,6 @@ export const moveToCubiePosition = {
     "Z": { axis: "z", values: [-1, 0, 1], move: "moveZDash", angle: ROTATION_FACTOR },
  }
 
- // Camera orientation relative map
-// export const CAMERA_ORIENTATIONS = {
-//     // no change same front face
-//     "+Z": { f: "f", b: "b", r: "r", l: "l" },
-//     // right side now front face
-//     "+X": { f: "r", b: "l", r: "b", l: "f" },
-//     // Top face now front face
-//     "+Y": { f: "u", b: "w", u: "b", d: "f" },
-    
-//     // back side now front face
-//     "-Z": { f: "b", b: "f", r: "l", l: "r" },
-//     // left side now front face
-//     "-X": { f: "l", b: "r", r: "f", l: "b" },
-//     // Bottom face now front face
-//     "-Y": { f: "w", b: "u", u: "f", d: "b" }
-// };
-
 
 // Right x = 1: yellow
 // state indexes: (36 - 44)

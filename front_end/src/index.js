@@ -56,21 +56,6 @@ renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 // background color (e.g., a dark slate gray)
 renderer.setClearColor("#161616", 1);
 
-// ... (camera and renderer setup) ...
-
-// Initialize TrackballControls
-// const controls = new TrackballControls(camera, renderer.domElement);
-// const controls = new OrbitControls(camera, renderer.domElement);
-
-// Smooth the movement (damping)
-// controls.rotateSpeed = 2.0;
-// controls.panSpeed = 2;
-// controls.dynamicDampingFactor = 0.3;
-
-// // vertical limits
-// controls.minPolarAngle = Math.PI * 0.1;
-// controls.maxPolarAngle = Math.PI * 0.9;
-// controls.enableDamping = true;
 
 // all cubies stored here.
 const cubies = [];
@@ -139,7 +124,6 @@ function animate() {
   requestAnimationFrame(animate);
 
 
-  // controls.update();
   
 
   // This is the magic line that actually draws the scene from the camera's perspective
@@ -242,17 +226,6 @@ pllBtn.addEventListener("click", async () => {
 })
 
 
-// using algo strings to initiate moves.
-
-// const algoStringInput = document.getElementById("algo-string-input");
-
-// algoStringInput.addEventListener("keydown", (e) => {
-//   if (e.key === "Enter") {
-//     // call function
-//     console.log("PRESSED ENTER IN INPUT FIELD: ", algoStringInput.value);
-//     playAlgorithm(algoStringInput.value, myStateCube, syncVisualCubeToState, cubies, scene, currAppState)
-//   }
-// })
 
 
 // solve cube button
@@ -293,15 +266,6 @@ playAlgoButton.addEventListener("click", async () => {
 )
 
 toggleControls();
-
-
-
-
-
-
-// let isHardMode = true;
-
-// setMode(controls, isHardMode)
 
 
 

@@ -125,6 +125,7 @@ button:active {
 .primary-btn {
   width: 100%;
 }
+
 /* Panel Base */
 .controls-panel {
   position: fixed;
@@ -132,7 +133,7 @@ button:active {
   right: 20px;
   width: 360px;
   background: rgba(30, 30, 46, 0.92);
-  backdrop-filter: blur(10px); /* Soft background blur */
+  backdrop-filter: blur(10px);
   border: 1px solid #313244;
   border-radius: 12px;
   padding: 18px;
@@ -201,7 +202,6 @@ kbd {
   background-color: #313244;
   color: #efdd56;
   border: 1px solid #45475a;
-  border-shadow: 0 2px 0 #181825;
   border-radius: 4px;
   padding: 2px 6px;
   font-family: monospace;
@@ -263,12 +263,12 @@ kbd {
 
 /* Active Pill Highlight */
 .segment-btn.active[data-mode="easy"] {
-  background: #a6e3a1; /* Gentle green for Easy */
+  background: #a6e3a1;
   color: #11111b;
 }
 
 .segment-btn.active[data-mode="hard"] {
-  background: #f38ba8; /* Red/Coral for Hard */
+  background: #f38ba8;
   color: #11111b;
 }
 

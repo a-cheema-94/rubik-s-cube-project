@@ -70,8 +70,28 @@ npx vite
 └── README.md
 ```
 
+### Understanding Cube Notation & Controls
+
+This application uses standard speedcubing notation for its on-screen OLL and PLL algorithm predictions, which differs slightly from the keyboard controls used to play the app. 
+
+**On-Screen Predicted Algorithms:**
+* **`R`, `U`, `F` (Capital Letters):** Turn the specified face 90 degrees.
+* **`R'`, `U'`, `F'` (Letter + Apostrophe):** Turn that face 90 degrees in the *opposite* direction.
+* **`r`, `u`, `f` (Lowercase Letters):** Indicates a **wide move** (turning the outer layer *and* the middle layer together).
+
+**Keyboard Controls:**
+* **Lowercase key (e.g., `r`, `u`, `f`):** Turns the face 90 degrees. *(Note: This is just a standard single-layer turn, not a wide move!)*
+* **Uppercase key / Shift (e.g., `R`, `U`, `F`):** Turns the face 90 degrees in the *opposite* direction.
+
+> **A Note on OLL/PLL Predictions**
+> You may notice that a predicted OLL or PLL algorithm is sometimes "off" by a single top-layer rotation. This is perfectly normal! In speedcubing, this is known as **Adjusting the U Face (AUF)**. Depending on how the top layer is currently sitting, you may need to perform a quick `U`, `U'`, or `U2` move before or after executing the predicted algorithm to align the pieces correctly.
+
+> **A Note Tesing Buttons**
+> The output from all the testing buttons can be seen in the console. The test solver speed may take a while to run. And there is a generate F2L state button, so the correct state is generated prior to pressing OLL and PLL buttons for testing purposes.
+
 ### Built With
 
 *  Frontend: React, Vite, TensorFlow.js
 *  Backend: Node.js, Express, Kociemba
 *  Algorithms: Kociemba's Two-Phase Algorithm, CFOP pattern matching.
+*  Models trained with set algorithms taken from [Cube Academy OLL algos](https://www.cube.academy/oll-algs) and [Cube Academy PLL algos](https://www.cube.academy/pll-algs).

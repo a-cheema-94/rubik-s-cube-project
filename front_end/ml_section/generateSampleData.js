@@ -109,8 +109,12 @@ export class SyntheticDataGenerator {
         // normalize topLayerColors -> map colors to faces
         const normalizedColors = this.normalizer(topLayerColors, this.cube.getCube())
 
+        // colors: (0: white, 1: yellow, 2: blue, 3: green, 4: orange, 5: red)
+        // faces: (0: Up, 1: Front, 2: Right, 3: Back, 4: Left)
+
         // one hot encoding
         const encodedData = this.oneHotEncode(normalizedColors)
+        // five possible sides for each sticker, U, L, R, F, B, no D face since only considering the top layer.
 
         // put data in dataset
         this.dataset.push({ data: encodedData, target: targetClass })
@@ -118,30 +122,3 @@ export class SyntheticDataGenerator {
     }
   }
 }
-
-// const test_data_generation = new SyntheticDataGenerator(cube, colorToFacesNormalizer, oneHotEncode)
-
-// test_data_generation.generateDataSamples("R U R' U R U2 R'", "solved_cross_1")
-
-// console.log("TEST DATA SET LENGTH: ", test_data_generation.dataset)
-
-
-
-
-// const originalState = [
-//       4, 4, 4, 4, 4, 4, 4, 4, 4,  // U (0-8)
-//       2, 2, 2, 2, 2, 2, 2, 2, 2,  // F (9-17)
-//       5, 5, 5, 5, 5, 5, 5, 5, 5,  // D (18-26)
-//       0, 0, 0, 0, 0, 0, 0, 0, 0,  // L (27-35)
-//       1, 1, 1, 1, 1, 1, 1, 1, 1,  // R (36-44)
-//       3, 3, 3, 3, 3, 3, 3, 3, 3   // B (45-53)
-// ]
-
-// const sampleUpperLayer = [
-//       2, 4, 0, 4, 4, 4, 1,
-//       4, 4, 2, 1, 1, 3, 2,
-//       4, 0, 0, 4, 3, 3, 4
-//     ]
-
-
-// console.log(colorToFacesNormalizer(sampleUpperLayer, originalState))

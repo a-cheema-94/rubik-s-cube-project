@@ -226,7 +226,6 @@ export function runAdversarialEvaluationSuite(ollModel, pllModel) {
       validationReason = `Rejected with Exception: ${error.message}`;
     }
     
-    // TODO => BELOW HERE
 
     // feed into model
     let ollMaxConf = 0;
@@ -308,7 +307,6 @@ export function runAdversarialEvaluationSuite(ollModel, pllModel) {
   
 
 
-  // measure confidence and latency
 
 
 

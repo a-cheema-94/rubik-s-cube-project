@@ -3,16 +3,6 @@ import { playAlgorithm } from "./algoStringMoves.js";
 
 
 
-// export const COLORS = {
-//   0: WHITE,
-//   1: YELLOW,
-//   2: BLUE,
-//   3: GREEN,
-//   4: ORANGE,
-//   5: RED
-// }
-
-
 
 const randomCubeState = [1, 1, 1, 0, 4, 4, 2, 3, 3, 5, 5, 1, 1, 3, 4, 5, 1, 1, 3, 5, 3, 5, 5, 3, 4, 0, 4, 5, 4, 0, 3, 1, 2, 0, 2, 0, 5, 1, 4, 2, 0, 2, 4, 4, 0, 2, 3, 2, 0, 2, 0, 3, 5, 2]
 
@@ -90,35 +80,3 @@ export function convertStateToCubeJS(cubeArr) {
   return finalString
 
 }
-
-
-
-// const sampleCube = new RubiksCube()
-// sampleCube.setCube(randomCubeState)
-
-// const answer = convertStateToCubeJS(sampleCube.getCube())
-
-// console.log("PREDICTED ANSWER: ", desiredCubeState)
-// console.log("GENERATED ANSWER: ", answer)
-// if(desiredCubeState === answer) {
-//   console.log("SUCCESS!!!")
-// } else {
-//   console.log("FAILURE!!")
-// }
-
-
-
-
-// try {
-  
-
-//   console.log(finalSolution)
-//   sampleCube.applyMoves(finalSolution)
-
-//   console.log("HOPEFULLY SOLVED CUBE ARRAY?: ", sampleCube.getCube())
-
-//   console.log("SOLUTION MOVES LENGTH: ", finalSolution.trim().split(/\s+/).length)
-// } catch (err) {
-//   console.error("Invalid cube state: ", err)
-// }
-

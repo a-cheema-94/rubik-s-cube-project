@@ -398,10 +398,3 @@ export class RubiksCube {
 const rCube = new RubiksCube();
 
 rCube.moveD()
-
-// console.log(rCube.getCube())
-
-
-// todo => refactor code into different files and functions and then import into index.js.
-// todo => test rotations with testing scripts amongst other stuff.
-// todo => save state to local storage, so previous state of cube is saved.

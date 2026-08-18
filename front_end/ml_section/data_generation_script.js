@@ -40,7 +40,7 @@ function exportToCSVFile(data, filename) {
 
 // oll
 for(const [key, value] of Object.entries(LAST_LAYER_ALGO_STORE["oll"])){
-  // add the following to the csv files
+  
   dataGenerator.generateDataSamples(value["algo"], parseInt(key))
 }
 exportToCSVFile(dataGenerator.dataset, "./ml_section/data/oll_training_data.csv")
@@ -49,7 +49,7 @@ dataGenerator.dataset = [];
 
 // pll
 for(const [key, value] of Object.entries(LAST_LAYER_ALGO_STORE["pll"])){
-  // add the following to the csv files
+  
   dataGenerator.generateDataSamples(value["algo"], parseInt(key))
 }
 exportToCSVFile(dataGenerator.dataset, "./ml_section/data/pll_training_data.csv")
