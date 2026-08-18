@@ -251,7 +251,7 @@ export function animateMove(
   let finalAngle = moveInfo.angle;
 
   // velocity of animation
-  const speed = 0.14;
+  const speed = 0.12;
   let direction = 1;
   // set for anticlockwise rotations
   if (finalAngle < 0) {
